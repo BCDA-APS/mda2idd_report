@@ -1,0 +1,54 @@
+2013-02-12, Zhonghou Cai has a request
+
+He uses yviewer to convert MDA files to ASCII
+and has relied on the support provided by the 
+asciiRpt.py program from Ben-Chin.
+
+host:  regulus
+ARCH:  Solaris SPARC
+uname: user2idd
+pwd:   *******************
+
+yviewer  -->
+  /APSshare/epics/extensions_2007_07_31/bin/linux-x86-fc6 -->
+  /home/beams8/USER2IDD/Yorick/asciiRpt.py
+
+(note: peculiar since regulus is a Sun SPARC host)
+
+Starting this run, for some unknown reason, 
+the open file dialog stops showing directory contents
+at directory depth of 4 or more.  
+He can't select the data files he wants to convert.
+
+example MDA and ASCII files are in directory below:
+  /net/s2dserv/export/2-iddf/data12c3/Alix_NWU
+  ./ASCII
+  ./mda
+
+He wants to regain this function.
+The data files must be written in the same way as before.
+
+example:
+  2iddf_0001.mda 
+  is a 1D scan
+  produces a single text file
+  2iddf_0001.1d.txt
+  
+  2iddf_0012.mda
+  is a 2D scan with several (say N) detectors
+  produces N text files, one per detector
+  2iddf_0012.imD01.txt
+  2iddf_0012.imD1.txt
+  2iddf_0012.imD2.txt
+  ...
+  2iddf_0012.imDF.txt
+
+The problem seems to happen on line 316 in the call to
+tkFileDialog.askopenfilename()
+How has this changed?
+
+Perhaps a simple update of the widget tools 
+might be all that is needed.
+Otherwise, rebuild using contemporary tools,
+reusing existing code if possible.
+The GUI is simple.
