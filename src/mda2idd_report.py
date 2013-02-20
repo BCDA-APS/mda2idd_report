@@ -46,7 +46,7 @@ Dependencies
 :operating system:
     none
 :MDA file support:
-    ``mda_f`` library from APS synApps
+    ``mda`` library from APS synApps
 
 ---------------------------------
 
@@ -68,7 +68,7 @@ Source Code Documentation
 import glob
 import os
 import optparse
-import mda_f
+import mda
 
 
 ROW_INDEX_FORMAT = '%5d'
@@ -87,7 +87,7 @@ def summaryMda(mdaFileName):
     if not os.path.exists(mdaFileName):
         return ''
     
-    data = mda_f.readMDA(mdaFileName)
+    data = mda.readMDA(mdaFileName)
     # TODO: check if MDA was read and valid and all that stuff ...
     
     summary = []
@@ -159,7 +159,7 @@ def report(mdaFileName):
     if os.path.exists(mdaFileName):
         asciiPath = getAsciiPath(mdaFileName)
     
-        data = mda_f.readMDA(mdaFileName)
+        data = mda.readMDA(mdaFileName)
         rank = data[0]['rank']
     
         if rank in (1, 2):
@@ -336,7 +336,7 @@ def getAsciiFileName(data, detNum = None):
     '''
     return the proper text file name, based on the file name stored in the MDA data structure
     
-    :param obj data: MDA data structure returned by mda_f.readMDA()
+    :param obj data: MDA data structure returned by mda.readMDA()
     :param int detNum: (2-D only)
     '''
     mdaFileName = os.path.basename(data[0]['filename'])

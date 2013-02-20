@@ -21,7 +21,7 @@ Source Code Documentation
 
 import optparse
 import os
-import mda_f
+import mda
 
 
 ROW_INDEX_FORMAT = '%5d'
@@ -40,7 +40,10 @@ def summaryMda(mdaFileName):
     if not os.path.exists(mdaFileName):
         return ''
     
-    data = mda_f.readMDA(mdaFileName)
+    #data = mda_f.readMDA(mdaFileName)
+    data = mda.skimMDA(mdaFileName) # just the header info
+    if data is None:
+        return "could not read: " + mdaFileName
     # TODO: check if MDA was read and valid and all that stuff ...
     
     summary = []
@@ -53,50 +56,53 @@ def summaryMda(mdaFileName):
     summary.append( 'dimensions = %s' % str(data[0]['dimensions']))
     summary.append( 'acquired_dimensions = %s' % str(data[0]['acquired_dimensions']))
     summary.append('')
-    summary.append( 'EPICS PVs')
-    summary.append( '---------')
-    summary.append('')
-    for k in sorted(data[0].keys()):
-        if k not in data[0]['ourKeys']:
-            desc, unit, value, _, _ = data[0][k]
-            txt = ""
-            if len(desc) > 0:
-                txt += " [%s]" % desc
-            if len(unit) > 0:
-                txt += " (%s)" % unit
-            txt += " %s =" % k
-            txt += " %s" % value
-            summary.append(' '*4 + txt.strip())
+    
+    # advanced header information obtainable through readMDA() method
+    if 'ourKeys' in data[0]:
+        summary.append( 'EPICS PVs')
+        summary.append( '---------')
+        summary.append('')
+        for k in sorted(data[0].keys()):
+            if k not in data[0]['ourKeys']:
+                desc, unit, value, _, _ = data[0][k]
+                txt = ""
+                if len(desc) > 0:
+                    txt += " [%s]" % desc
+                if len(unit) > 0:
+                    txt += " (%s)" % unit
+                txt += " %s =" % k
+                txt += " %s" % value
+                summary.append(' '*4 + txt.strip())
 
-    for dimNum in (1, 2, 3, 4):
-        if len(data) > dimNum:
-            summary.append('')
-            summary.append( '%d-D Scan Info' % dimNum)
-            summary.append( '-------------')
-            base = data[dimNum]
-            parts_dict = {
-                'Positioners': base.p,
-                'Detectors': base.d,
-                'Triggers': base.t,
-            }
-            for partname, part in parts_dict.items():
-                if len(part) > 0:
-                    indent = ' '*4
-                    summary.append('')
-                    summary.append( indent + partname)
-                    summary.append( indent + ('~'*len(partname)))
-                    summary.append('')
-                    for item in part:
-                        txt = item.name
-                        if partname == 'Triggers':
-                            txt += " = %s" % str(item.command)
-                        else:
-                            txt += " (%s)" % item.fieldName
-                            if len(item.unit) > 0:
-                                txt += ", unit=%s" % item.unit
-                            if len(item.desc) > 0:
-                                txt += ": %s" % item.desc
-                        summary.append( indent + txt )
+        for dimNum in (1, 2, 3, 4):
+            if len(data) > dimNum:
+                summary.append('')
+                summary.append( '%d-D Scan Info' % dimNum)
+                summary.append( '-------------')
+                base = data[dimNum]
+                parts_dict = {
+                    'Positioners': base.p,
+                    'Detectors': base.d,
+                    'Triggers': base.t,
+                }
+                for partname, part in parts_dict.items():
+                    if len(part) > 0:
+                        indent = ' '*4
+                        summary.append('')
+                        summary.append( indent + partname)
+                        summary.append( indent + ('~'*len(partname)))
+                        summary.append('')
+                        for item in part:
+                            txt = item.name
+                            if partname == 'Triggers':
+                                txt += " = %s" % str(item.command)
+                            else:
+                                txt += " (%s)" % item.fieldName
+                                if len(item.unit) > 0:
+                                    txt += ", unit=%s" % item.unit
+                                if len(item.desc) > 0:
+                                    txt += ": %s" % item.desc
+                            summary.append( indent + txt )
 
     return '\n'.join(summary)
 
@@ -118,4 +124,7 @@ def main():
 
 
 if __name__ == '__main__':
+#    import sys
+#    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0009.mda'))
+#    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0014.mda'))
     main()
