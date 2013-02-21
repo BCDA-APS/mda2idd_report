@@ -40,7 +40,7 @@ def summaryMda(mdaFileName):
     if not os.path.exists(mdaFileName):
         return ''
     
-    #data = mda_f.readMDA(mdaFileName)
+    #data = mda.readMDA(mdaFileName)
     data = mda.skimMDA(mdaFileName) # just the header info
     if data is None:
         return "could not read: " + mdaFileName
