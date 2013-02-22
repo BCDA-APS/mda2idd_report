@@ -22,17 +22,19 @@ def makeFile(filename, **attr):
     addAttributes(f, attr)
     return f
 
-def makeGroup(parent, name, nxclass):
+def makeGroup(parent, name, nxclass, **attr):
     """
     create a NeXus group
 
     :param obj parent: parent group
     :param str name: valid NeXus group name
     :param str nxclass: valid NeXus class name
+    :param attr: optional keywords of attributes
     :return: h5py group object
     """
     group = parent.create_group(name)
     group.attrs["NX_class"] = nxclass
+    addAttributes(group, attr)
     return group
 
 def makeDataset(parent, name, data = None, **attr):

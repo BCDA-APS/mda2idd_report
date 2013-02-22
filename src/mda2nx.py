@@ -42,13 +42,19 @@ def process(mdaFile):
         nxh5_lib.makeDataset(nxentry, 'scan_number', data=scan_number)
         nxh5_lib.makeDataset(nxentry, 'scan_rank', data=rank)
         nxh5_lib.makeDataset(nxentry, 'original_filename', data=data[0]['filename'])
+        
+        nxdata = nxh5_lib.makeGroup(nxentry, 'data', "NXdata", signal='', axes='')
+        
+        # TODO: prepare to slice arrays due to difference in curr_pt and npts (dimensions acquired v. planned)
+        
         if rank > 0:
             nxh5_lib.makeDataset(nxentry, 'date_time', data=data[1].time)
             for order in range(rank):
                 dim = data[order+1]
                 nxcoll = nxh5_lib.makeGroup(nxentry, 'dim'+str(order+1), "NXcollection")
+                default_pos = None
                 for item in dim.p:
-                    nxh5_lib.makeDataset(nxcoll, 
+                    ds = nxh5_lib.makeDataset(nxcoll, 
                                             makeSafeHdf5Name(item.fieldName), 
                                             sscan_part = 'positioner',
                                             data=item.data, 
@@ -60,14 +66,32 @@ def process(mdaFile):
                                             readback_unit=item.readback_unit,
                                             step_mode=item.step_mode,
                                             EPICS_PV=item.name)
+                    if default_pos is None:
+                        default_pos = item
+                        dataset_name = 'p%d' % (order+1)
+                        nxh5_lib.makeLink(nxdata, ds, dataset_name)
+                        # Massively big assumption here that the first positioner found
+                        # for each dimension will be used as one of the axes to plot
+                        # the first detector found in the highest dimension
+                        # Hopefully, this mostly succeeds or can be be changed later.
+                        axes = nxdata.attrs['axes']
+                        if len(axes) > 0:
+                            axes += ','
+                        nxdata.attrs['axes'] = axes+dataset_name
+                default_det = None
                 for item in dim.d:
-                    nxh5_lib.makeDataset(nxcoll, 
+                    ds = nxh5_lib.makeDataset(nxcoll, 
                                             makeSafeHdf5Name(item.fieldName), 
                                             sscan_part = 'detector',
                                             data=item.data, 
                                             units=item.unit, 
                                             long_name=item.desc,
                                             EPICS_PV=item.name)
+                    if default_det is None:
+                        default_det = item
+                        dataset_name = 'd%d' % (order+1)
+                        nxh5_lib.makeLink(nxdata, ds, dataset_name)
+                        nxdata.attrs['signal'] = dataset_name
                 for item in dim.t:
                     nxh5_lib.makeDataset(nxcoll, 
                                             makeSafeHdf5Name('T%02d' % item.number), 
@@ -75,15 +99,6 @@ def process(mdaFile):
                                             data=item.command, 
                                             number=item.number,
                                             EPICS_PV=item.name)
-        
-        nxdata = nxh5_lib.makeGroup(nxentry, 'data', "NXdata")
-        # TODO: to be a valid NeXus file MUST have some data, synthesize if no data acquired
-        for order in range(rank):
-            dim = data[order+1]
-            # TODO: construct hard links from dimension positioners and detectors to items here
-            # MDA file offers no help selecting which
-            # TODO: must make some kind of default choice: P1 and D01 for each dimension, 
-            #default plot of highest dimension detector but chek shapes to get the positioners right.
         
         pvs = epics_pvs(data)
         if len(pvs) > 0:
@@ -101,8 +116,20 @@ def process(mdaFile):
 
 
 def makeSafeHdf5Name(proposed):
-    '''return a name that is safe to use as an HDF5 object'''
-    safe = proposed # TODO: must do something here
+    '''return a name that is safe to use as a NeXus HDF5 object'''
+    # Note that this a safe NeXus object name starts with a letter (upper or lower case)
+    # or "_" (underscore), then letters, numbers, and "_" and is limited to
+    # no more than 63 characters (imposed by the HDF5 rules for names).
+    safe = ''
+    for c in proposed:
+        if c.isalnum() or c == '_':
+            if len(safe) == 0 and c.isdigit():
+                safe = '_'
+            safe += c
+        else:
+            safe += '_'
+    if safe.startswith('NX'):
+        safe = '_' + safe
     return safe
 
 
@@ -122,47 +149,18 @@ def epics_pvs(data):
     return pvs
 
 
-def main(mdaFileList):
-    '''do the work'''
-    for item in mdaFileList:
-        process(item)
+def fix7idFile(nxFileName):
+    '''identify components for NXdata (now handled in process() above)'''
+    f = h5py.File(nxFileName, "a")
+    make7idNxExample(f)
+    f.close()
 
 
-if __name__ == '__main__':
-    filename = os.path.join('..', 'data', 'mda', '7idc_0040.mda')
-    sys.argv.append(filename)
-#    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0012.mda'))
-#    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0001.mda'))
-    main(sys.argv[1:])
-    
-    # fix items in 7ID file
-    filename = os.path.join('..', 'data', 'mda', '7idc_0040.h5')
-    f = h5py.File(filename, "a")
+def make7idNxExample(f):
+    '''cherry-pick an image dataset for an example'''
     dim2_p1 = f['/scan_0040/dim2/P1']
     dim3_p1 = f['/scan_0040/dim3/P1']
     dim3_d09 = f['/scan_0040/dim3/D09']
-    nxdata = f['/scan_0040/data']
-    series = 2
-    nxh5_lib.makeDataset(nxdata, 
-                           makeSafeHdf5Name('image'), 
-                           data=dim3_d09[series], 
-                           units=dim3_d09.attrs.get('units'), 
-                           long_name=dim3_d09.attrs.get('long_name'), 
-                           signal=1,
-                           )
-    nxh5_lib.makeDataset(nxdata, 
-                           makeSafeHdf5Name('x'), 
-                           data=dim2_p1[series], 
-                           units=dim2_p1.attrs.get('units'),
-                           long_name=dim2_p1.attrs.get('long_name'), 
-                           )
-    nxh5_lib.makeDataset(nxdata, 
-                           makeSafeHdf5Name('y'), 
-                           data=dim3_p1[series], 
-                           units=dim3_p1.attrs.get('units'),
-                           long_name=dim3_p1.attrs.get('long_name'), 
-                           )
-    
     nxf = nxh5_lib.makeFile("example_7id.h5", 
                             file_name="example_7id.h5",
                             file_time=f.attrs.get('file_time'),
@@ -173,8 +171,21 @@ if __name__ == '__main__':
                             original_datetime = f['/scan_0040/date_time'],
                             )
     nxentry = nxh5_lib.makeGroup(nxf, 'entry', "NXentry")
+    default_data = None
     for series in range(len(dim2_p1)): 
-        nxdata = nxh5_lib.makeGroup(nxentry, 'data%d' % (series+1), "NXdata")
+        data_name = 'data%d' % (series+1)
+        nxdata = nxh5_lib.makeGroup(nxentry, 
+                                    data_name, 
+                                    "NXdata",
+                                    signal="image",
+                                    axes="x,y",
+                                    x_indices="1",
+                                    y_indices="1,2",
+                                    )
+        if default_data is None:
+            default_data = str(nxdata.name)     # absolute path
+            default_data = data_name            # relative to this group
+            nxentry.attrs['default_NXdata'] = default_data
         nxh5_lib.makeDataset(nxdata, 
                                makeSafeHdf5Name('image'), 
                                data=dim3_d09[series], 
@@ -204,4 +215,19 @@ The <image> dataset should be plotted against <x> and <y> values such that image
     nxh5_lib.makeDataset(nxnote, makeSafeHdf5Name('comment'), data=comment)
     nxf.close()
 
-    f.close()
+
+def main(mdaFileList):
+    '''do the work'''
+    for item in mdaFileList:
+        process(item)
+
+
+if __name__ == '__main__':
+    filename = os.path.join('..', 'data', 'mda', '7idc_0040.mda')
+    sys.argv.append(filename)
+    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0012.mda'))
+    sys.argv.append(os.path.join('..', 'data', 'mda', '2iddf_0001.mda'))
+    main(sys.argv[1:])
+    
+    # fix items in 7ID file
+    fix7idFile(os.path.join('..', 'data', 'mda', '7idc_0040.h5'))
