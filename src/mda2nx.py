@@ -57,7 +57,7 @@ def process(mdaFile):
                 default_pos = None
                 for item in dim.p:
                     ds = nxh5_lib.makeDataset(nxcoll, 
-                                            makeSafeHdf5Name(item.fieldName), 
+                                            nxh5_lib.safeHdf5Name(item.fieldName), 
                                             sscan_part = 'positioner',
                                             data=item.data, 
                                             units=item.unit, 
@@ -80,7 +80,7 @@ def process(mdaFile):
                 default_det = None
                 for item in dim.d:
                     ds = nxh5_lib.makeDataset(nxcoll, 
-                                            makeSafeHdf5Name(item.fieldName), 
+                                            nxh5_lib.safeHdf5Name(item.fieldName), 
                                             sscan_part = 'detector',
                                             data=item.data, 
                                             units=item.unit, 
@@ -93,7 +93,7 @@ def process(mdaFile):
                         signal = [dataset_name]
                 for item in dim.t:
                     nxh5_lib.makeDataset(nxcoll, 
-                                            makeSafeHdf5Name('T%02d' % item.number), 
+                                            nxh5_lib.safeHdf5Name('T%02d' % item.number), 
                                             sscan_part = 'trigger',
                                             data=item.command, 
                                             number=item.number,
@@ -106,7 +106,7 @@ def process(mdaFile):
             nxcollection = nxh5_lib.makeGroup(nxentry, 'EPICS_PVs', "NXcollection")
             for pv, v in pvs.items():
                 nxh5_lib.makeDataset(nxcollection, 
-                                   makeSafeHdf5Name(pv), 
+                                   nxh5_lib.safeHdf5Name(pv), 
                                    data=v['value'], 
                                    units=v['units'], 
                                    long_name=v['description'], 
@@ -114,24 +114,6 @@ def process(mdaFile):
                                    EPICS_PV=pv)
         
         f.close()
-
-
-def makeSafeHdf5Name(proposed):
-    '''return a name that is safe to use as a NeXus HDF5 object'''
-    # Note that a safe NeXus object name starts with a letter (upper or lower case)
-    # or "_" (underscore), then letters, numbers, and "_" and is limited to
-    # no more than 63 characters (imposed by the HDF5 rules for names).
-    safe = ''
-    for c in proposed:
-        if c.isalnum() or c == '_':
-            if len(safe) == 0 and c.isdigit():
-                safe = '_'
-            safe += c
-        else:
-            safe += '_'
-    if safe.startswith('NX'):
-        safe = '_' + safe
-    return safe
 
 
 def epics_pvs(data):
@@ -188,20 +170,20 @@ def make7idNxExample(f):
             default_data = data_name            # relative to this group
             nxentry.attrs['default_NXdata'] = default_data
         nxh5_lib.makeDataset(nxdata, 
-                               makeSafeHdf5Name('image'), 
+                               nxh5_lib.safeHdf5Name('image'), 
                                data=dim3_d09[series], 
                                units=dim3_d09.attrs.get('units'), 
                                long_name=dim3_d09.attrs.get('long_name'), 
                                signal=1,
                                )
         nxh5_lib.makeDataset(nxdata, 
-                               makeSafeHdf5Name('x'), 
+                               nxh5_lib.safeHdf5Name('x'), 
                                data=dim2_p1[series], 
                                units=dim2_p1.attrs.get('units'),
                                long_name=dim2_p1.attrs.get('long_name'), 
                                )
         nxh5_lib.makeDataset(nxdata, 
-                               makeSafeHdf5Name('y'), 
+                               nxh5_lib.safeHdf5Name('y'), 
                                data=dim3_p1[series], 
                                units=dim3_p1.attrs.get('units'),
                                long_name=dim3_p1.attrs.get('long_name'), 
@@ -213,7 +195,7 @@ The <y> dataset represents the positioner values for each column, but the actual
 The <image> dataset should be plotted against <x> and <y> values such that image( x[row], y[row[col]] ).
     '''.strip()
     nxnote = nxh5_lib.makeGroup(nxentry, 'comment', "NXnote")
-    nxh5_lib.makeDataset(nxnote, makeSafeHdf5Name('comment'), data=comment)
+    nxh5_lib.makeDataset(nxnote, nxh5_lib.safeHdf5Name('comment'), data=comment)
     nxf.close()
 
 

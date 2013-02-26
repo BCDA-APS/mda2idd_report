@@ -19,7 +19,7 @@ def makeFile(filename, **attr):
     :return: h5py file object
     """
     f = h5py.File(filename, "w")
-    addAttributes(f, attr)
+    addAttributes(f, **attr)
     return f
 
 def makeGroup(parent, name, nxclass, **attr):
@@ -34,7 +34,7 @@ def makeGroup(parent, name, nxclass, **attr):
     """
     group = parent.create_group(name)
     group.attrs["NX_class"] = nxclass
-    addAttributes(group, attr)
+    addAttributes(group, **attr)
     return group
 
 def makeDataset(parent, name, data = None, **attr):
@@ -50,7 +50,7 @@ def makeDataset(parent, name, data = None, **attr):
         obj = parent.create_dataset(name)
     else:
         obj = parent.create_dataset(name, data=data)
-    addAttributes(obj, attr)
+    addAttributes(obj, **attr)
     return obj
 
 def makeLink(parent, sourceObject, targetName):
@@ -88,7 +88,7 @@ def makeExternalLink(hdf5FileObject, sourceFile, sourcePath, targetPath):
     """
     hdf5FileObject[targetPath] = h5py.ExternalLink(sourceFile, sourcePath)
 
-def addAttributes(parent, attr):
+def addAttributes(parent, **attr):
     """
     add attributes to an h5py data item
 
@@ -110,3 +110,21 @@ def get2ColumnData(fileName):
     xArr = buffer[0]
     yArr = numpy.asarray(buffer[1],'int32')
     return xArr, yArr
+
+
+def safeHdf5Name(proposed):
+    '''return a name that is safe to use as a NeXus HDF5 object'''
+    # Note that a safe NeXus object name starts with a letter (upper or lower case)
+    # or "_" (underscore), then letters, numbers, and "_" and is limited to
+    # no more than 63 characters (imposed by the HDF5 rules for names).
+    safe = ''
+    for c in proposed:
+        if c.isalnum() or c == '_':
+            if len(safe) == 0 and c.isdigit():
+                safe = '_'
+            safe += c
+        else:
+            safe += '_'
+    if safe.startswith('NX'):
+        safe = '_' + safe
+    return safe
