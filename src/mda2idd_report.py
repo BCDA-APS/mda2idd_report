@@ -88,7 +88,8 @@ def summaryMda(mdaFileName):
         return ''
     
     data = mda.readMDA(mdaFileName)
-    # TODO: check if MDA was read and valid and all that stuff ...
+    if data is None:
+        return 'could not read: ' + mdaFileName
     
     summary = []
     summary.append( 'MDA version = %.1f' % data[0]['version'] )

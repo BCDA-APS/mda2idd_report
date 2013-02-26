@@ -30,7 +30,7 @@ __description__ = "Generate ASCII text summary of MDA files for APS station 2-ID
 __svnid__ = "$Id$"
 
 
-def summaryMda(mdaFileName):
+def summaryMda(mdaFileName, shortReport = True):
     '''
     text summary of a single MDA file (name, rank, datetime, ...)
     
@@ -40,11 +40,10 @@ def summaryMda(mdaFileName):
     if not os.path.exists(mdaFileName):
         return ''
     
-    #data = mda.readMDA(mdaFileName)
-    data = mda.skimMDA(mdaFileName) # just the header info
+    reportType = {True: mda.skimMDA, False: mda.readMDA}[shortReport]
+    data = reportType(mdaFileName) # just the header info
     if data is None:
         return "could not read: " + mdaFileName
-    # TODO: check if MDA was read and valid and all that stuff ...
     
     summary = []
     summary.append( 'MDA version = %.1f' % data[0]['version'] )
