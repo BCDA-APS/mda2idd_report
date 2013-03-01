@@ -14,6 +14,7 @@ converts 1-D and 2-D scans stored in MDA files into the
 text file format produced by ``yca scanSee_report`` (a
 Yorick-based support).
 
+
 Main Methods
 ------------
 
@@ -149,7 +150,17 @@ def summaryMda(mdaFileName):
     return '\n'.join(summary)
 
 
-def report(mdaFileName):
+class ReadMdaException(Exception):
+    '''MDA files are all version 1.3 (+/- 0.01)'''
+    pass
+
+
+class RankException(Exception):
+    '''this report can only handle ranks 1 and 2'''
+    pass
+
+
+def report(mdaFileName, allowException=False):
     '''
     converts MDA file to 1 or more ASCII text files, based on the rank
     
@@ -157,22 +168,37 @@ def report(mdaFileName):
     :returns dict: {mdaFileName: [asciiFileName]}
     '''
     converted = {}
-    if os.path.exists(mdaFileName):
-        asciiPath = getAsciiPath(mdaFileName)
-    
-        data = mda.readMDA(mdaFileName)
-        rank = data[0]['rank']
-    
-        if rank in (1, 2):
-            if len(data[0]['acquired_dimensions']) == rank:
-                method = {1: report_1d, 2: report_2d}[rank]
-                for key, value in method(data).items():
-                    writeOutput(asciiPath, key, value)
-                    if mdaFileName not in converted:
-                        converted[mdaFileName] = []
-                    converted[mdaFileName].append( os.path.join(asciiPath, key) )
+    if not os.path.exists(mdaFileName):
+        return converted
+
+    asciiPath = getAsciiPath(mdaFileName)
+
+    data = mda.readMDA(mdaFileName)
+    if data is None:
+        msg = "could not read data from MDA file: " + mdaFileName
+        if allowException:
+            raise ReadMdaException, msg
         else:
-            print '%d-D data: not handled by this code' % rank
+            print msg
+        return converted
+        
+    rank = data[0]['rank']
+
+    if rank in (1, 2):
+        if len(data[0]['acquired_dimensions']) == rank:
+            method = {1: report_1d, 2: report_2d}[rank]
+            for key, value in method(data).items():
+                writeOutput(asciiPath, key, value)
+                if mdaFileName not in converted:
+                    converted[mdaFileName] = []
+                converted[mdaFileName].append( os.path.join(asciiPath, key) )
+    else:
+        msg = '%d-D data: not handled by this code' % rank
+        if allowException:
+            raise RankException, msg
+        else:
+            print msg
+                
     return converted
 
 
