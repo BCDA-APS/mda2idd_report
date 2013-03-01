@@ -60,11 +60,12 @@ __version__ = "2013-02"
 __svnid__ = "$Id$"
 __author__ = "Pete Jemian"
 __author_email__ = "jemian@anl.gov"
-__url__ = "$URL$"
 __url__ = "https://subversion.xray.aps.anl.gov/bcdaext/yviewer/"
+__url__ = "$URL$".strip('$').split()[1]
 
 
 RC_FILE = ".mda2idd_gui_rc.xml"
+
 
 class MainWindow(wx.Frame):
     
@@ -329,84 +330,93 @@ class MainWindow(wx.Frame):
 
     def readPreferences(self):
         '''read program prefs from a file'''
-        if self.preferences_file is not None:
-            if os.path.exists(self.preferences_file):
-                tree = ElementTree.parse(self.preferences_file)
-                root = tree.getroot()
-                
-                window = root.find('window')
-                node = window.find('size')
-                self.prefs['size_h'] = int(node.attrib['h'])
-                self.prefs['size_v'] = int(node.attrib['v'])
-                node = window.find('position')
-                self.prefs['pos_h'] = int(node.attrib['h'])
-                self.prefs['pos_v'] = int(node.attrib['v'])
-                node = window.find('sash')
-                self.prefs['sash_pos'] = int(node.attrib['pos'])
+        if self.preferences_file is None:
+            return
 
-                node = root.find('mrud')
-                self.prefs['mrud_max_directories'] = int(node.attrib['max_directories'])
-                self.mrud = [subnode.text.strip() for subnode in node.findall('dir')]
-                
-                self.prefs['file_filter'] = root.find('file_filter').text.strip()
-                node = root.find('short_summary')
-                self.prefs['short_summary'] = node is None or 'true' == node.text.strip().lower()
-                self.prefs['start_dir'] = root.find('starting_directory').text.strip()
+        if not os.path.exists(self.preferences_file):
+            return
+    
+        tree = ElementTree.parse(self.preferences_file)
+        root = tree.getroot()
+        
+        window = root.find('window')
+        node = window.find('size')
+        self.prefs['size_h'] = int(node.attrib['h'])
+        self.prefs['size_v'] = int(node.attrib['v'])
+        node = window.find('position')
+        self.prefs['pos_h'] = int(node.attrib['h'])
+        self.prefs['pos_v'] = int(node.attrib['v'])
+        node = window.find('sash')
+        self.prefs['sash_pos'] = int(node.attrib['pos'])
+
+        node = root.find('mrud')
+        self.prefs['mrud_max_directories'] = int(node.attrib['max_directories'])
+        self.mrud = [subnode.text.strip() for subnode in node.findall('dir')]
+        
+        self.prefs['file_filter'] = root.find('file_filter').text.strip()
+        node = root.find('short_summary')
+        self.prefs['short_summary'] = node is None or 'true' == node.text.strip().lower()
+        self.prefs['start_dir'] = root.find('starting_directory').text.strip()
 
     def writePreferences(self):
         '''save program prefs to a file'''
-        if self.preferences_file is not None:
-            if os.path.exists(os.path.dirname(self.preferences_file)):
-                if self.startup_complete:
+        if self.preferences_file is None:
+            return
+        
+        if not os.path.exists(os.path.dirname(self.preferences_file)):
+            return
+        
+        if not self.startup_complete:
+            return
 
-                    self.prefs['size_h'], self.prefs['size_v'] = self.GetSize()
-                    self.prefs['pos_h'],  self.prefs['pos_v']  = self.GetPosition()
-                    self.prefs['short_summary'] = self.menu_file.IsChecked(self.id_menu_report)
-                
-                    root = ElementTree.Element("mda2idd_gui")
-                    root.set("version", __version__)
-                    root.set("datetime", str(datetime.datetime.now()))
-                    
-                    node = ElementTree.SubElement(root, "preferences_file")
-                    node.text = self.preferences_file
-                    
-                    node = ElementTree.SubElement(root, "written_by")
-                    node.set("program", sys.argv[0])
-                    
-                    node = ElementTree.SubElement(root, "subversion")
-                    node.set("id", __svnid__)
-                    
-                    window = ElementTree.SubElement(root, "window")
-                    node = ElementTree.SubElement(window, "size")
-                    node.set("h", str(self.prefs['size_h']))
-                    node.set("v", str(self.prefs['size_v']))
-                    node = ElementTree.SubElement(window, "position")
-                    node.set("h", str(self.prefs['pos_h']))
-                    node.set("v", str(self.prefs['pos_v']))
-                    node = ElementTree.SubElement(window, "sash")
-                    node.set("pos", str(self.prefs['sash_pos']))
-                    
-                    node = ElementTree.SubElement(root, "file_filter")
-                    node.text = self.prefs['file_filter']
-                    
-                    node = ElementTree.SubElement(root, "starting_directory")
-                    node.text = self.prefs['start_dir']
-                    
-                    node = ElementTree.SubElement(root, "short_summary")
-                    node.text = str(self.prefs['short_summary'])
-                    
-                    mrud = ElementTree.SubElement(root, "mrud")
-                    mrud.append(ElementTree.Comment('MRUD: Most-Recently-Used Directory'))
-                    mrud.set("max_directories", str(self.prefs['mrud_max_directories']))
-                    for item in self.mrud:
-                        ElementTree.SubElement(mrud, "dir").text = item
+        self.prefs['size_h'], self.prefs['size_v'] = self.GetSize()
+        self.prefs['pos_h'],  self.prefs['pos_v']  = self.GetPosition()
+        self.prefs['short_summary'] = self.menu_file.IsChecked(self.id_menu_report)
     
-                    doc = minidom.parseString(ElementTree.tostring(root))
-                    xmlText = doc.toprettyxml(indent = "  ", encoding='UTF-8')
-                    
-                    f = open(self.preferences_file, 'w')
-                    f.write(xmlText)
-                    f.close()
+        root = ElementTree.Element("mda2idd_gui")
+        root.set("version", __version__)
+        root.set("datetime", str(datetime.datetime.now()))
+        
+        node = ElementTree.SubElement(root, "preferences_file")
+        node.text = self.preferences_file
+        
+        node = ElementTree.SubElement(root, "written_by")
+        node.set("program", sys.argv[0])
+        
+        node = ElementTree.SubElement(root, "subversion")
+        node.set("id", __svnid__)
+        
+        window = ElementTree.SubElement(root, "window")
+        node = ElementTree.SubElement(window, "size")
+        node.set("h", str(self.prefs['size_h']))
+        node.set("v", str(self.prefs['size_v']))
+        node = ElementTree.SubElement(window, "position")
+        node.set("h", str(self.prefs['pos_h']))
+        node.set("v", str(self.prefs['pos_v']))
+        node = ElementTree.SubElement(window, "sash")
+        node.set("pos", str(self.prefs['sash_pos']))
+        
+        node = ElementTree.SubElement(root, "file_filter")
+        node.text = self.prefs['file_filter']
+        
+        node = ElementTree.SubElement(root, "starting_directory")
+        node.text = self.prefs['start_dir']
+        
+        node = ElementTree.SubElement(root, "short_summary")
+        node.text = str(self.prefs['short_summary'])
+        
+        mrud = ElementTree.SubElement(root, "mrud")
+        mrud.append(ElementTree.Comment('MRUD: Most-Recently-Used Directory'))
+        mrud.set("max_directories", str(self.prefs['mrud_max_directories']))
+        for item in self.mrud:
+            ElementTree.SubElement(mrud, "dir").text = item
+
+        doc = minidom.parseString(ElementTree.tostring(root))
+        xmlText = doc.toprettyxml(indent = "  ", encoding='UTF-8')
+        
+        f = open(self.preferences_file, 'w')
+        f.write(xmlText)
+        f.close()
     
     def update_mrud(self, newdir):
         '''MRUD: list of most-recently-used directories'''
@@ -423,26 +433,27 @@ class MainWindow(wx.Frame):
     def update_mrud_menus(self):
         '''manage the MRUD menu items'''
         
-        if len(self.mrud) > 0:
+        if len(self.mrud) == 0:
+            return
         
-            # remove old MRUD items
-            # look for items just after "MRUD list" until the separator
+        # remove old MRUD items
+        # look for items just after "MRUD list" until the separator
+        item = self.menu_file.FindItemByPosition(self.mrud_insertion_pos)
+        while item.GetKind() != wx.ITEM_SEPARATOR:
+            #label = item.GetLabel()
+            self.menu_file.Delete(item.GetId())
             item = self.menu_file.FindItemByPosition(self.mrud_insertion_pos)
-            while item.GetKind() != wx.ITEM_SEPARATOR:
-                #label = item.GetLabel()
-                self.menu_file.Delete(item.GetId())
-                item = self.menu_file.FindItemByPosition(self.mrud_insertion_pos)
 
-            # add new MRUD items
-            counter = 0
-            for path in self.mrud:
-                if os.path.exists(path):
-                    text = '%s\tCtrl+%d' % (path, counter+1)
-                    position = self.mrud_insertion_pos + counter
-                    self.menu_file.Insert(position, wx.ID_ANY, text=text)
-                    item_id = self.menu_file.FindItem(text)
-                    self.Bind(wx.EVT_MENU, self.OnMrudItem, id=item_id)
-                    counter += 1
+        # add new MRUD items
+        counter = 0
+        for path in self.mrud:
+            if os.path.exists(path):
+                text = '%s\tCtrl+%d' % (path, counter+1)
+                position = self.mrud_insertion_pos + counter
+                self.menu_file.Insert(position, wx.ID_ANY, text=text)
+                item_id = self.menu_file.FindItem(text)
+                self.Bind(wx.EVT_MENU, self.OnMrudItem, id=item_id)
+                counter += 1
         
     def OnMrudItem(self, event):
         '''handle MRUD menu items'''
