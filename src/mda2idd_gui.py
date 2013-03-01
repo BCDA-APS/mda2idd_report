@@ -183,6 +183,7 @@ class MainWindow(wx.Frame):
                 'Windows': 'USERPROFILE', 
                 'Linux': 'HOME',
                 'SunOS': 'HOME',
+                'Darwin': 'HOME',
               }
         this_os = platform.system()
         if this_os not in known_os.keys():
