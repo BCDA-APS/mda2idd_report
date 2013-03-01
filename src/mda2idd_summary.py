@@ -41,7 +41,10 @@ def summaryMda(mdaFileName, shortReport = True):
         return ''
     
     reportType = {True: mda.skimMDA, False: mda.readMDA}[shortReport]
-    data = reportType(mdaFileName) # just the header info
+    try:
+        data = reportType(mdaFileName) # just the header info
+    except Exception as report:
+	return "problem with %s: %s" % (mdaFileName, str(report))
     if data is None:
         return "could not read: " + mdaFileName
     

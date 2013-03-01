@@ -69,7 +69,7 @@ RC_FILE = ".mda2idd_gui_rc.xml"
 class MainWindow(wx.Frame):
     
     def __init__(self, parent=None, start_fresh=False):
-        wx.Frame.__init__(self, parent, wx.ID_ANY, u'gui_2idd', wx.DefaultPosition, 
+        wx.Frame.__init__(self, parent, wx.ID_ANY, u'mda2idd_gui', wx.DefaultPosition, 
                           wx.Size(200, 100), name=u'root', 
                           style=wx.DEFAULT_FRAME_STYLE)
 
@@ -177,8 +177,10 @@ class MainWindow(wx.Frame):
         self.setSummaryText('(empty)')
 
         self.dir = wx.GenericDirCtrl(self.splitter1, wx.ID_ANY, 
-                                     dir=self.prefs['start_dir'])
-        self.dir.SetFilter(self.prefs['file_filter'])
+                                     dir=self.prefs['start_dir'],
+                                     filter=self.prefs['file_filter'],
+                                     )
+
         # Select the starting folder and expand to it
         self.setCurrentDirectory(self.prefs['start_dir'])
         self.splitter1.SplitVertically(self.dir, self.textCtrl1)
@@ -225,7 +227,7 @@ class MainWindow(wx.Frame):
             event.Skip()
             return
         selectedItem = self.dir.GetPath()
-        self.setStatusText( selectedItem )
+        self.setStatusText( 'selected: ' + selectedItem )
         if os.path.exists(selectedItem):
             if os.path.isfile(selectedItem):
                 checked = self.menu_file.IsChecked(self.id_menu_report)
@@ -281,6 +283,7 @@ class MainWindow(wx.Frame):
         
         :param event: wxPython event object
         '''
+        # TODO: does not get here in RHEL5
         self.writePreferences()
         self.Close()
     
@@ -291,9 +294,6 @@ class MainWindow(wx.Frame):
     
     def setSummaryText(self, text):
         '''post new text to the summary TextCtrl, clearing any existing text'''
-        #self.textCtrl1.Clear()
-        #self.textCtrl1.AppendText(str(text))
-        #self.textCtrl1.SetSelection(0,0)    # SetSelection() not working on Linux!
         self.textCtrl1.ChangeValue(str(text))
     
     def appendSummaryText(self, text):
