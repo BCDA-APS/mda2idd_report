@@ -483,7 +483,7 @@ class MainWindow(wx.Frame):
         info.WebSite = (URL, __svnid__)
         author = __author__ +  " <" + __author_email__ + ">"
         info.Developers = ['main author: ' + author, 
-                           'MDA file support: Time Mooney <mooney@aps.anl.gov>']
+                           'MDA file support: Tim Mooney <mooney@aps.anl.gov>']
         # Then we call wx.AboutBox giving it the info object
         wx.AboutBox(info)
         

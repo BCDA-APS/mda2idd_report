@@ -73,7 +73,7 @@ def summaryMda(mdaFileName, shortReport = True):
                 if len(unit) > 0:
                     txt += " (%s)" % unit
                 txt += " %s =" % k
-                txt += " %s" % value
+                txt += " %s" % str(value)
                 summary.append(' '*4 + txt.strip())
 
         for dimNum in (1, 2, 3, 4):
