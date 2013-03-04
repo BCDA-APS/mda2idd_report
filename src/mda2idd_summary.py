@@ -40,33 +40,38 @@ def summaryMda(mdaFileName, shortReport = True):
     if not os.path.exists(mdaFileName):
         return ''
     
-    reportType = {True: mda.skimMDA, False: mda.readMDA}[shortReport]
+    if 'skimMDA' in mda.__dict__:
+        reportType = {True: mda.skimMDA, False: mda.readMDA}[shortReport]
+    else:
+        reportType = mda.readMDA	# /APSshare/bin/python's mda does not have skimMDA
     try:
         data = reportType(mdaFileName) # just the header info
-    except Exception as report:
+    except Exception, report:
 	return "problem with %s: %s" % (mdaFileName, str(report))
     if data is None:
         return "could not read: " + mdaFileName
     
+    headSection = data[0]
     summary = []
-    summary.append( 'MDA version = %.1f' % data[0]['version'] )
-    summary.append( 'Filename = %s' % data[0]['filename'] )
-    summary.append( 'rank = %d' % data[0]['rank'])
-    summary.append( '1-D Scan # = %d' % data[0]['scan_number'] )
+    summary.append( 'MDA version = %.1f' % headSection['version'] )
+    summary.append( 'Filename = %s' % headSection['filename'] )
+    summary.append( 'rank = %d' % headSection['rank'])
+    summary.append( '1-D Scan # = %d' % headSection['scan_number'] )
     if len(data) > 1:
         summary.append( '1-D scan timeStamp= %s' % data[1].time )
-    summary.append( 'dimensions = %s' % str(data[0]['dimensions']))
-    summary.append( 'acquired_dimensions = %s' % str(data[0]['acquired_dimensions']))
+    summary.append( 'dimensions = %s' % str(headSection['dimensions']))
+    if 'acquired_dimensions' in headSection:
+        summary.append( 'acquired_dimensions = %s' % str(headSection['acquired_dimensions']))
     summary.append('')
     
     # advanced header information obtainable through readMDA() method
-    if 'ourKeys' in data[0]:
+    if 'ourKeys' in headSection:
         summary.append( 'EPICS PVs')
         summary.append( '---------')
         summary.append('')
-        for k in sorted(data[0].keys()):
-            if k not in data[0]['ourKeys']:
-                desc, unit, value, _, _ = data[0][k]
+        for k in sorted(headSection.keys()):
+            if k not in headSection['ourKeys']:
+                desc, unit, value, _, _ = headSection[k]
                 txt = ""
                 if len(desc) > 0:
                     txt += " [%s]" % desc

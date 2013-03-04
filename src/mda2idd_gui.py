@@ -476,14 +476,20 @@ class MainWindow(wx.Frame):
         # derived from http://wiki.wxpython.org/Using%20wxPython%20Demo%20Code
         # First we create and fill the info object
         info = wx.AboutDialogInfo()
-        info.Name = sys.argv[0]
-        info.Version = __version__
-        info.Description = __doc__
-        URL = __url__
-        info.WebSite = (URL, __svnid__)
+        info.SetName( sys.argv[0] )
+        info.SetVersion( __version__ ) 
+        info.SetDescription( __doc__ )
+        if float(wx.VERSION_STRING[0:3]) < 2.9:	# pre-phoenix wxPython support
+            info.SetWebSite( __url__ )
+        else:						# phoenix wxPython support
+            info.SetWebSite( __url__, desc=__svnid__ )
         author = __author__ +  " <" + __author_email__ + ">"
-        info.Developers = ['main author: ' + author, 
-                           'MDA file support: Tim Mooney <mooney@aps.anl.gov>']
+        info.SetDevelopers(
+          (
+              'main author: ' + __author__ +  " <" + __author_email__ + ">",
+              'MDA file support: Tim Mooney <mooney@aps.anl.gov>'
+          )
+        )
         # Then we call wx.AboutBox giving it the info object
         wx.AboutBox(info)
         
@@ -514,7 +520,7 @@ class MainWindow(wx.Frame):
                 msg = ''
                 for k, v in answer.items():
                     msg += '\n* ' + k + ' --> ' + str(v)
-            except (mda2idd_report.ReadMdaException, mda2idd_report.RankException) as answer:
+            except (mda2idd_report.ReadMdaException, mda2idd_report.RankException), answer:
                 msg = '\n* ' + mdaFile + ': ' + str(answer)
             self.appendSummaryText(msg)
 
