@@ -96,54 +96,45 @@ class MainWindow(wx.Frame):
         self.startup_complete = True
         
     def _init_menus(self):
-        id_menu_exit    = 8101 # arbitrary starting number
-        id_menu_prefs   = 1 + id_menu_exit
-        id_menu_about   = 1 + id_menu_prefs
-        id_menu_save    = 1 + id_menu_about
-        self.id_menu_report  = 1 + id_menu_save
-        id_menu_mrud  = 1 + self.id_menu_report
-        id_menu_convert_all  = 1 + id_menu_mrud
-
         self.menu_file = wx.Menu(title='')
-        self.menu_file.Append(text=u'&Save\tCtrl+S', id=id_menu_save,
+        item = self.menu_file.Append(text=u'&Save\tCtrl+S', id=wx.ID_ANY,
                               help=u'Save MDA data to ASCII text file')
-        self.Bind(wx.EVT_MENU, self.OnMenuFileItemSave, id=id_menu_save)
+        self.Bind(wx.EVT_MENU, self.OnMenuFileItemSave, id=item.GetId())
 
-        self.menu_file.Append(text=u'Convert entire &Directory\tCtrl+D', id=id_menu_convert_all,
+        item = self.menu_file.Append(text=u'Convert entire &Directory\tCtrl+D', id=wx.ID_ANY,
                               help=u'Convert all MDA files in current directory to ASCII text files')
-        self.Bind(wx.EVT_MENU, self.OnConvertAll, id=id_menu_convert_all)
+        self.Bind(wx.EVT_MENU, self.OnConvertAll, id=item.GetId())
         
         self.menu_file.AppendSeparator()
-        self.menu_file.AppendCheckItem(text=u'Brief &Report\tCtrl+R', id=self.id_menu_report,
+        item = self.menu_file.AppendCheckItem(text=u'Brief &Report\tCtrl+R', id=wx.ID_ANY,
                               help=u'Show a brief summary report of the selected MDA file')
-        self.Bind(wx.EVT_MENU, self.OnMenuFileItemReportStyle, id=self.id_menu_report)
+        self.Bind(wx.EVT_MENU, self.OnMenuFileItemReportStyle, id=item.GetId())
+        self.id_menu_report = item.GetId()
+
         # TODO: provide a control to let user edit self.preferences_file
         # TODO: provide a control to let user edit self.prefs
 #        self.menu_file.Append(text=u'&Preferences ...', id=id_menu_prefs,
 #                              help=u'Edit program preferences ...')
 #        self.Bind(wx.EVT_MENU, self.OnMenuFileItemPrefs, id=id_menu_prefs)
         self.menu_file.AppendSeparator()
-        self.menu_file.Append(text=u'&Save\tCtrl+S', id=id_menu_save,
-                              help=u'Save MDA data to ASCII text file')
-        self.menu_file.AppendSeparator()
 
         
-        self.menu_file.Append(text=u'MRUD list', id=id_menu_mrud,
+        item = self.menu_file.Append(text=u'MRUD list', id=wx.ID_ANY,
                               help=u'Most Recently Used Directories')
-        self.menu_file.Enable(id_menu_mrud, False)
+        self.menu_file.Enable(item.GetId(), False)
         self.mrud_insertion_pos = self.menu_file.GetMenuItemCount()
         self.menu_file.AppendSeparator()
         
-        self.menu_file.Append(text=u'E&xit', id=id_menu_exit,
+        item = self.menu_file.Append(text=u'E&xit', id=wx.ID_ANY,
                               help=u'Quit this application')
-        self.Bind(wx.EVT_MENU, self.OnMenuFileItemExit, id=id_menu_exit)
+        self.Bind(wx.EVT_MENU, self.OnMenuFileItemExit, id=item.GetId())
 
         self.menu_edit = wx.Menu(title='')
 
         self.menu_help = wx.Menu(title='')
-        self.menu_help.Append(text=u'&About ...', id=id_menu_about,
+        item = self.menu_help.Append(text=u'&About ...', id=wx.ID_ANY,
                               help=u'About this application')
-        self.Bind(wx.EVT_MENU, self.OnAbout, id=id_menu_about)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=item.GetId())
 
         self.menuBar1 = wx.MenuBar()
         self.menuBar1.Append(menu=self.menu_file, title=u'&File')
