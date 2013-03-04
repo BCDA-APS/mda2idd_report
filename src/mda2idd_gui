@@ -1,0 +1,17 @@
+#!/usr/bin/env tcsh
+
+# 2013-03-04, PRJ:  pick which python to be run
+if (`uname -s` == "Linux") then
+  setenv THIS_PYTHON /APSshare/epd/rh6-x86/bin/python
+endif
+if (`uname -s` == "SunOS") then
+  setenv THIS_PYTHON /APSshare/epd/SunOS_5.10-x86/bin/python
+  if (`uname -m` == "sun4u") then
+    setenv THIS_PYTHON /APSshare/bin/python
+  endif
+endif
+
+setenv TOOL /home/beams/USER2IDD/Documents/mda2idd_report/mda2idd_gui.py
+
+# ignore all console and error output
+${THIS_PYTHON} ${TOOL} >& /dev/null &
