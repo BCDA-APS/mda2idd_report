@@ -136,13 +136,12 @@ def summaryMda(mdaFileName):
                     summary.append( indent + ('~'*len(partname)))
                     summary.append('')
                     for item in part:
-                        txt = item.name
                         if partname == 'Triggers':
-                            txt += " = %s" % str(item.command)
+                            txt = "%s = %s" % (item.name, str(item.command))
                         else:
-                            txt += " (%s)" % item.fieldName
-                            if len(item.unit) > 0:
-                                txt += ", unit=%s" % item.unit
+                            txt = "%s:  %s" % (item.fieldName, item.name)
+                            if len(unit) > 0:
+                                txt += " (%s)" % unit
                             if len(item.desc) > 0:
                                 txt += ": %s" % item.desc
                         summary.append( indent + txt )
