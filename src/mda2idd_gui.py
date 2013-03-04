@@ -100,22 +100,31 @@ class MainWindow(wx.Frame):
         item = self.menu_file.Append(text=u'&Save\tCtrl+S', id=wx.ID_ANY,
                               help=u'Save MDA data to ASCII text file')
         self.Bind(wx.EVT_MENU, self.OnMenuFileItemSave, id=item.GetId())
+        #print "menu item: ", item.GetId(), item.GetLabel()
 
-        item = self.menu_file.Append(text=u'Convert entire &Directory\tCtrl+D', id=wx.ID_ANY,
-                              help=u'Convert all MDA files in current directory to ASCII text files')
+        item = self.menu_file.Append(
+            text=u'Convert entire &Directory\tCtrl+D', 
+            id=wx.ID_ANY,
+            help=u'Convert all MDA files in current directory to ASCII text files')
         self.Bind(wx.EVT_MENU, self.OnConvertAll, id=item.GetId())
+        #print "menu item: ", item.GetId(), item.GetLabel()
         
         self.menu_file.AppendSeparator()
-        item = self.menu_file.AppendCheckItem(text=u'Brief &Report\tCtrl+R', id=wx.ID_ANY,
-                              help=u'Show a brief summary report of the selected MDA file')
+
+        item = self.menu_file.AppendCheckItem(
+            text=u'Brief &Report\tCtrl+R', 
+            id=wx.ID_ANY,
+            help=u'Show a brief summary report of the selected MDA file')
         self.Bind(wx.EVT_MENU, self.OnMenuFileItemReportStyle, id=item.GetId())
         self.id_menu_report = item.GetId()
+        #print "menu item: ", item.GetId(), item.GetLabel()
 
         # TODO: provide a control to let user edit self.preferences_file
         # TODO: provide a control to let user edit self.prefs
 #        self.menu_file.Append(text=u'&Preferences ...', id=id_menu_prefs,
 #                              help=u'Edit program preferences ...')
 #        self.Bind(wx.EVT_MENU, self.OnMenuFileItemPrefs, id=id_menu_prefs)
+
         self.menu_file.AppendSeparator()
 
         
@@ -123,11 +132,14 @@ class MainWindow(wx.Frame):
                               help=u'Most Recently Used Directories')
         self.menu_file.Enable(item.GetId(), False)
         self.mrud_insertion_pos = self.menu_file.GetMenuItemCount()
+        #print "menu item: ", item.GetId(), item.GetLabel()
+
         self.menu_file.AppendSeparator()
         
         item = self.menu_file.Append(text=u'E&xit', id=wx.ID_ANY,
                               help=u'Quit this application')
         self.Bind(wx.EVT_MENU, self.OnMenuFileItemExit, id=item.GetId())
+        #print "menu item: ", item.GetId(), item.GetLabel()
 
         self.menu_edit = wx.Menu(title='')
 
@@ -135,6 +147,7 @@ class MainWindow(wx.Frame):
         item = self.menu_help.Append(text=u'&About ...', id=wx.ID_ANY,
                               help=u'About this application')
         self.Bind(wx.EVT_MENU, self.OnAbout, id=item.GetId())
+        #print "menu item: ", item.GetId(), item.GetLabel()
 
         self.menuBar1 = wx.MenuBar()
         self.menuBar1.Append(menu=self.menu_file, title=u'&File')
@@ -281,19 +294,23 @@ class MainWindow(wx.Frame):
     
     def setCurrentDirectory(self, directory):
         '''set the current directory'''
+        #print "set directory:", str(directory)
         self.dir.ExpandPath(directory)
         self.dirPicker.SetPath(directory)
     
     def setSummaryText(self, text):
         '''post new text to the summary TextCtrl, clearing any existing text'''
+        #print "new summary:", str(text)
         self.textCtrl1.ChangeValue(str(text))
     
     def appendSummaryText(self, text):
         '''post new text to the summary TextCtrl, appending to any existing text'''
+        #print "additional summary:", str(text)
         self.textCtrl1.AppendText(str(text))
     
     def setStatusText(self, text):
         '''post new text to the status bar'''
+        #print "new status:", str(text)
         self.statusBar.SetStatusText(text)
 
     def getPreferences(self, start_fresh=False):
@@ -341,8 +358,9 @@ class MainWindow(wx.Frame):
         self.prefs['sash_pos'] = int(node.attrib['pos'])
 
         node = root.find('mrud')
-        self.prefs['mrud_max_directories'] = int(node.attrib['max_directories'])
-        self.mrud = [subnode.text.strip() for subnode in node.findall('dir')]
+	if node is not None:
+            self.prefs['mrud_max_directories'] = int(node.attrib['max_directories'])
+            self.mrud = [subnode.text.strip() for subnode in node.findall('dir')]
         
         self.prefs['file_filter'] = root.find('file_filter').text.strip()
         node = root.find('short_summary')
@@ -441,14 +459,15 @@ class MainWindow(wx.Frame):
             if os.path.exists(path):
                 text = '%s\tCtrl+%d' % (path, counter+1)
                 position = self.mrud_insertion_pos + counter
-                self.menu_file.Insert(position, wx.ID_ANY, text=text)
-                item_id = self.menu_file.FindItem(text)
-                self.Bind(wx.EVT_MENU, self.OnMrudItem, id=item_id)
+                item = self.menu_file.Insert(position, wx.ID_ANY, text=text)
+                self.Bind(wx.EVT_MENU, self.OnMrudItem, id=item.GetId())
+                #print "menu item: ", item.GetId(), item.GetLabel()
                 counter += 1
         
     def OnMrudItem(self, event):
         '''handle MRUD menu items'''
         label = self.menu_file.GetLabelText(event.GetId())
+        #print "onMrudItem: ", event.GetId(), str(label)
         self.setCurrentDirectory(label)
 #        self.setStatusText(label)
         
@@ -464,15 +483,17 @@ class MainWindow(wx.Frame):
         info.WebSite = (URL, __svnid__)
         author = __author__ +  " <" + __author_email__ + ">"
         info.Developers = ['main author: ' + author, 
-                           'MDA support: Time Mooney <mooney@aps.anl.gov>']
+                           'MDA file support: Time Mooney <mooney@aps.anl.gov>']
         # Then we call wx.AboutBox giving it the info object
         wx.AboutBox(info)
         
     def OnConvertAll(self, event):
         '''selected the "ConvertAll" menu item'''
+        # use path from preferences
+        path = self.prefs['start_dir']
         # use path from self.dirPicker widget
-        #path = self.prefs['start_dir']
-        path = self.dirPicker.GetPath()
+        #path = self.dirPicker.GetPath()
+	#print "convert directory:", path
         self.setStatusText('Converting all MDA files to ASCII in directory: ' + path)
         self.convertMdaDir(path)
         
@@ -481,12 +502,13 @@ class MainWindow(wx.Frame):
         if not os.path.exists(path):
             self.setSummaryText('non-existent path: ' + path)
             return
-        fileList = glob.glob(os.path.join(path, '*.mda'))
+        # assumes self.prefs['file_filter'] is just '*.mda'
+	fileList = glob.glob(os.path.join(path, self.prefs['file_filter']))
         if len(fileList) == 0:
             self.setSummaryText('No MDA files to convert in directory: ' + path)
             return
         self.setSummaryText('Converting these files:\n')
-        for mdaFile in fileList:
+        for mdaFile in sorted(fileList):
             try:
                 answer = mda2idd_report.report(mdaFile, allowException=True)
                 msg = ''
