@@ -466,10 +466,7 @@ class MainWindow(wx.Frame):
         info.SetName( os.path.basename(sys.argv[0]) )
         info.SetVersion( __version__ )
         info.SetDescription( sys.argv[0] + '\n\n' + __doc__ )
-        if float(wx.VERSION_STRING[0:3]) < 2.9:	# pre-phoenix wxPython support
-            info.SetWebSite( __url__ )
-        else:						# phoenix wxPython support
-            info.SetWebSite( __url__, desc=__svnid__ )
+        info.SetWebSite( __url__ )
         info.SetDevelopers(
           (
               'main author: ' + __author__ +  " <" + __author_email__ + ">",
