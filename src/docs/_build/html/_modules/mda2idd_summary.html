@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mda2idd_summary &mdash; mda2idd_report 2013-02-14 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2013-02-14',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="mda2idd_report 2013-02-14 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mda2idd_summary</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Generate ASCII text summaries of MDA files for APS station 2-ID-D</span>
+
+
+<span class="sd">---------------</span>
+
+<span class="sd">Source Code Documentation</span>
+<span class="sd">-------------------------</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="c">########### SVN repository information ###################</span>
+<span class="c"># $Date: 2013-03-04 11:06:53 -0600 (Mon, 04 Mar 2013) $</span>
+<span class="c"># $Author: jemian $</span>
+<span class="c"># $Revision: 1241 $</span>
+<span class="c"># $URL: https://subversion.xray.aps.anl.gov/bcdaext/mda2idd_report/src/mda2idd_summary.py $</span>
+<span class="c"># $Id: mda2idd_summary.py 1241 2013-03-04 17:06:53Z jemian $</span>
+<span class="c">########### SVN repository information ###################</span>
+
+
+<span class="kn">import</span> <span class="nn">optparse</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">mda</span>
+
+
+<span class="n">ROW_INDEX_FORMAT</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%5d</span><span class="s">&#39;</span>
+
+<span class="n">__description__</span> <span class="o">=</span> <span class="s">&quot;Generate ASCII text summary of MDA files for APS station 2-ID-D&quot;</span>
+<span class="n">__svnid__</span> <span class="o">=</span> <span class="s">&quot;$Id: mda2idd_summary.py 1241 2013-03-04 17:06:53Z jemian $&quot;</span>
+
+
+<div class="viewcode-block" id="summaryMda"><a class="viewcode-back" href="../mda2idd_summary.html#mda2idd_summary.summaryMda">[docs]</a><span class="k">def</span> <span class="nf">summaryMda</span><span class="p">(</span><span class="n">mdaFileName</span><span class="p">,</span> <span class="n">shortReport</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    text summary of a single MDA file (name, rank, datetime, ...)</span>
+<span class="sd">    </span>
+<span class="sd">    Developed for the GUI to give the user a preview of the file</span>
+<span class="sd">    before saving its data as ASCII to a text file.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mdaFileName</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span>
+    
+    <span class="k">if</span> <span class="s">&#39;skimMDA&#39;</span> <span class="ow">in</span> <span class="n">mda</span><span class="o">.</span><span class="n">__dict__</span><span class="p">:</span>
+        <span class="n">reportType</span> <span class="o">=</span> <span class="p">{</span><span class="bp">True</span><span class="p">:</span> <span class="n">mda</span><span class="o">.</span><span class="n">skimMDA</span><span class="p">,</span> <span class="bp">False</span><span class="p">:</span> <span class="n">mda</span><span class="o">.</span><span class="n">readMDA</span><span class="p">}[</span><span class="n">shortReport</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reportType</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">readMDA</span>	<span class="c"># /APSshare/bin/python&#39;s mda does not have skimMDA</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">reportType</span><span class="p">(</span><span class="n">mdaFileName</span><span class="p">)</span> <span class="c"># just the header info</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">report</span><span class="p">:</span>
+	<span class="k">return</span> <span class="s">&quot;problem with </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mdaFileName</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">report</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;could not read: &quot;</span> <span class="o">+</span> <span class="n">mdaFileName</span>
+    
+    <span class="n">headSection</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;MDA version = </span><span class="si">%.1f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">headSection</span><span class="p">[</span><span class="s">&#39;version&#39;</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;Filename = </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">headSection</span><span class="p">[</span><span class="s">&#39;filename&#39;</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;rank = </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">headSection</span><span class="p">[</span><span class="s">&#39;rank&#39;</span><span class="p">])</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;1-D Scan # = </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">headSection</span><span class="p">[</span><span class="s">&#39;scan_number&#39;</span><span class="p">]</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;1-D scan timeStamp= </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="p">)</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;dimensions = </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">headSection</span><span class="p">[</span><span class="s">&#39;dimensions&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s">&#39;acquired_dimensions&#39;</span> <span class="ow">in</span> <span class="n">headSection</span><span class="p">:</span>
+        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;acquired_dimensions = </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">headSection</span><span class="p">[</span><span class="s">&#39;acquired_dimensions&#39;</span><span class="p">]))</span>
+    <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+    
+    <span class="c"># advanced header information obtainable through readMDA() method</span>
+    <span class="k">if</span> <span class="s">&#39;ourKeys&#39;</span> <span class="ow">in</span> <span class="n">headSection</span><span class="p">:</span>
+        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;EPICS PVs&#39;</span><span class="p">)</span>
+        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;---------&#39;</span><span class="p">)</span>
+        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">headSection</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headSection</span><span class="p">[</span><span class="s">&#39;ourKeys&#39;</span><span class="p">]:</span>
+                <span class="n">desc</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">headSection</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">txt</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot; [</span><span class="si">%s</span><span class="s">]&quot;</span> <span class="o">%</span> <span class="n">desc</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot; (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">unit</span>
+                <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s"> =&quot;</span> <span class="o">%</span> <span class="n">k</span>
+                <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">txt</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">dimNum</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">dimNum</span><span class="p">:</span>
+                <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">-D Scan Info&#39;</span> <span class="o">%</span> <span class="n">dimNum</span><span class="p">)</span>
+                <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="s">&#39;-------------&#39;</span><span class="p">)</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">dimNum</span><span class="p">]</span>
+                <span class="n">parts_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">&#39;Positioners&#39;</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                    <span class="s">&#39;Detectors&#39;</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">d</span><span class="p">,</span>
+                    <span class="s">&#39;Triggers&#39;</span><span class="p">:</span> <span class="n">base</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="n">partname</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">indent</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="o">*</span><span class="mi">4</span>
+                        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">partname</span><span class="p">)</span>
+                        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">indent</span> <span class="o">+</span> <span class="p">(</span><span class="s">&#39;~&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">partname</span><span class="p">)))</span>
+                        <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">partname</span> <span class="o">==</span> <span class="s">&#39;Triggers&#39;</span><span class="p">:</span>
+                                <span class="n">txt</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">command</span><span class="p">))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">txt</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">   </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">fieldName</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">unit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot; (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="o">.</span><span class="n">unit</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">desc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">txt</span> <span class="o">+=</span> <span class="s">&quot;: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="o">.</span><span class="n">desc</span>
+                            <span class="n">summary</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">txt</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="summary_list"><a class="viewcode-back" href="../mda2idd_summary.html#mda2idd_summary.summary_list">[docs]</a><span class="k">def</span> <span class="nf">summary_list</span><span class="p">(</span><span class="n">mdaFileList</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;process a list of MDA files&#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">mdaFile</span> <span class="ow">in</span> <span class="n">mdaFileList</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">+</span><span class="n">mdaFile</span>
+        <span class="k">print</span> <span class="s">&quot;=&quot;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">mdaFile</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">print</span> <span class="n">summaryMda</span><span class="p">(</span><span class="n">mdaFile</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../mda2idd_summary.html#mda2idd_summary.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;handles command-line input&#39;&#39;&#39;</span>
+    <span class="n">usage</span> <span class="o">=</span> <span class="s">&#39;usage: %prog [options] mdaFile [mdaFile ...]&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">optparse</span><span class="o">.</span><span class="n">OptionParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">__description__</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">__svnid__</span><span class="p">)</span>
+    <span class="n">options</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">summary_list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="c">#    import sys</span>
+<span class="c">#    sys.argv.append(os.path.join(&#39;..&#39;, &#39;data&#39;, &#39;mda&#39;, &#39;2iddf_0009.mda&#39;))</span>
+<span class="c">#    sys.argv.append(os.path.join(&#39;..&#39;, &#39;data&#39;, &#39;mda&#39;, &#39;2iddf_0014.mda&#39;))</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Pete Jemian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

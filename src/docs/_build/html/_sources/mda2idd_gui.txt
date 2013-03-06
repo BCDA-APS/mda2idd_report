@@ -1,0 +1,15 @@
+.. $Id: mda2idd_gui.rst 1212 2013-02-17 21:35:49Z jemian $
+
+mda2idd_gui
+===========
+
+Source code documentation
+
+:mod:`mda2idd_gui` Module
+----------------------------------
+
+.. automodule:: mda2idd_gui
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

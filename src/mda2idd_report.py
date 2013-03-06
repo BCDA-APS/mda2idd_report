@@ -10,44 +10,67 @@ Objectives
 * Creates a GUI similar to that of ``asciiRpt.py`` (aka *yviewer*)
 
 Different than the output from *mdaAscii*, this module
-converts 1-D and 2-D scans stored in MDA files into the
+converts 1-D and 2-D scans stored in MDA files [#]_ into the
 text file format produced by ``yca scanSee_report`` (a
 Yorick-based support).
+
+.. [#] MDA format specification: http://www.aps.anl.gov/bcda/synApps/sscan/saveData_fileFormat.txt
 
 
 Main Methods
 ------------
 
-:report():
-    converts MDA file to 1 or more ASCII text files, based on the rank
+* :func:`report()`:
+  converts MDA file to 1 or more ASCII text files, based on the rank
 
-:report_list(mdaFileList):
-    process a list of MDA files
+* :func:`report_list()`:
+  process a list of MDA files
 
-:summaryMda(mdaFile):
-    text summary of a single MDA file (name, rank, datetime, ...)
+* :func:`summaryMda()`:
+  text summary of a single MDA file (name, rank, datetime, ...)
     
 Internal (but interesting) Methods
 ----------------------------------
 
-:report_1d(mdaFileName):
-    report 1-D MDA scan data in the format for 2-ID-D
-    (called by :meth:`report()`)
+* :func:`report_1d()`:
+  report 1-D MDA scan data in the format for APS station 2-ID-D
+  (called by :func:`report()`)
 
-:report_2d(mdaFileName):
-    report 2-D MDA scan data in the format for 2-ID-D
-    (called by :meth:`report()`)
+* :func:`report_2d()`:
+  report 2-D MDA scan data in the format for APS station 2-ID-D
+  (called by :func:`report()`)
 
-:columnsToText(columns):
-    convert a list of column lists into rows of text
+* :func:`columnsToText()`:
+  convert a list of column lists into rows of text
 
 Dependencies
 ------------
 
-:operating system:
-    none
-:MDA file support:
-    ``mda`` library from APS synApps
+operating system
+^^^^^^^^^^^^^^^^^^^
+
+None.  This software was developed on a Windows 7 system and tested on 
+various Linux distributions (Ubuntu, mint, and RHEL Linux) and on MacOSX.  
+It was also tested on solaris but the performance was too poor on that 
+specific system to advocate its continued use.
+
+MDA file support
+^^^^^^^^^^^^^^^^^^^^^^
+
+This code requires the *mda* file format support library from APS synApps.  
+Principally, two files support files are needed.
+Download them and place them in the same directory with this project.
+
+* https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils/mda.py
+* https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils/f_xdrlib.py
+
+In the same directory, there are also a pair of files (*setup.cfg* & *setup.py*) 
+that can be used to install the mda support into the python site-packages directory.
+Install them with these commands:
+
+>>> svn co https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils mdaPythonUtils
+>>> cd mdaPythonUtils
+>>> python setup.py install
 
 ---------------------------------
 

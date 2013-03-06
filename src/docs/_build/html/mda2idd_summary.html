@@ -1,0 +1,148 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mda2idd_summary &mdash; mda2idd_report 2013-02-14 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2013-02-14',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="mda2idd_report 2013-02-14 documentation" href="index.html" />
+    <link rel="prev" title="mda2idd_report" href="mda2idd_report.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mda2idd_report.html" title="mda2idd_report"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mda2idd_summary</a><ul>
+<li><a class="reference internal" href="#module-mda2idd_summary"><tt class="docutils literal"><span class="pre">mda2idd_summary</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#source-code-documentation">Source Code Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mda2idd_report.html"
+                        title="previous chapter">mda2idd_report</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mda2idd_summary.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mda2idd-summary">
+<h1>mda2idd_summary<a class="headerlink" href="#mda2idd-summary" title="Permalink to this headline">¶</a></h1>
+<p>Source code documentation</p>
+<div class="section" id="module-mda2idd_summary">
+<span id="mda2idd-summary-module"></span><h2><a class="reference internal" href="#module-mda2idd_summary" title="mda2idd_summary"><tt class="xref py py-mod docutils literal"><span class="pre">mda2idd_summary</span></tt></a> Module<a class="headerlink" href="#module-mda2idd_summary" title="Permalink to this headline">¶</a></h2>
+<p>Generate ASCII text summaries of MDA files for APS station 2-ID-D</p>
+<hr class="docutils" />
+<div class="section" id="source-code-documentation">
+<h3>Source Code Documentation<a class="headerlink" href="#source-code-documentation" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="mda2idd_summary.main">
+<tt class="descclassname">mda2idd_summary.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_summary.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_summary.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>handles command-line input</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mda2idd_summary.summaryMda">
+<tt class="descclassname">mda2idd_summary.</tt><tt class="descname">summaryMda</tt><big>(</big><em>mdaFileName</em>, <em>shortReport=True</em><big>)</big><a class="reference internal" href="_modules/mda2idd_summary.html#summaryMda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_summary.summaryMda" title="Permalink to this definition">¶</a></dt>
+<dd><p>text summary of a single MDA file (name, rank, datetime, ...)</p>
+<p>Developed for the GUI to give the user a preview of the file
+before saving its data as ASCII to a text file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mda2idd_summary.summary_list">
+<tt class="descclassname">mda2idd_summary.</tt><tt class="descname">summary_list</tt><big>(</big><em>mdaFileList</em><big>)</big><a class="reference internal" href="_modules/mda2idd_summary.html#summary_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_summary.summary_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>process a list of MDA files</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mda2idd_report.html" title="mda2idd_report"
+             >previous</a> |</li>
+        <li><a href="index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Pete Jemian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

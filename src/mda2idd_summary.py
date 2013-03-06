@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 '''
-Generate ASCII text summary of MDA files for APS station 2-ID-D
+Generate ASCII text summaries of MDA files for APS station 2-ID-D
 
+
+---------------
 
 Source Code Documentation
 -------------------------

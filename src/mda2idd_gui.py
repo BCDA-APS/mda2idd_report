@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 '''
-GUI for mda2idd_report
+GUI for :mod:`mda2idd_report`
 
 Objectives
 ------------
 
 Provide GUI tools to browse a file system and select
-MDA files.  Process them with :mod:`report_2idd`.
+MDA files.  Process them with :mod:`mda2idd_report`.
 
 Instructions
 ------------
@@ -27,9 +27,15 @@ Features
 
 * presents file system list
 * adds directory picker dialog and text entry box
-* preview brief header or full summary of MDA file
-* convert one selected MDA file to ASCII
-* convert entire directory of MDA files to ASCII
+* preview brief header or full summary of MDA file (^B)
+* convert one selected MDA file to ASCII (^S)
+* convert entire directory of MDA files to ASCII (^D)
+
+---------------
+
+Source Code Documentation
+-------------------------
+
 '''
 
 
@@ -62,6 +68,7 @@ __author__ = "Pete Jemian"
 __author_email__ = "jemian@anl.gov"
 __url__ = "https://subversion.xray.aps.anl.gov/bcdaext/yviewer/"
 __url__ = "$URL$".strip('$').split()[1]
+__url__ = "http://tinyurl.com/bq9l5o7"
 
 
 RC_FILE = ".mda2idd_gui_rc.xml"
@@ -118,9 +125,9 @@ class MainWindow(wx.Frame):
 
         # TODO: provide a control to let user edit self.preferences_file
         # TODO: provide a control to let user edit self.prefs
-#        self.menu_file.Append(text=u'&Preferences ...', id=id_menu_prefs,
-#                              help=u'Edit program preferences ...')
-#        self.Bind(wx.EVT_MENU, self.OnMenuFileItemPrefs, id=id_menu_prefs)
+        #self.menu_file.Append(text=u'&Preferences ...', id=id_menu_prefs,
+        #                      help=u'Edit program preferences ...')
+        #self.Bind(wx.EVT_MENU, self.OnMenuFileItemPrefs, id=id_menu_prefs)
 
         self.menu_file.AppendSeparator()
 
@@ -195,7 +202,51 @@ class MainWindow(wx.Frame):
         self.SetSizerAndFit(sizer)
         
     def GetDefaultPreferencesFileName(self):
-        '''return the name of the preferences file for this session'''
+        '''
+        return the name of the preferences file for this session
+        
+        The preferences file, an XML file that contains recent program
+        settings for specific program features, is saved in the HOME
+        (or USERPROFILE on Windows) directory for the user account under
+        the ``.mda2idd_gui_rc.xml`` file name.  Here is an example
+        from a Windows 7 system::
+
+            <?xml version="1.0" encoding="UTF-8"?>
+            <mda2idd_gui datetime="2013-03-06 13:09:17.593000" version="2013-02">
+              <preferences_file>C:\Users\Pete\.mda2idd_gui_rc.xml</preferences_file>
+              <written_by program="C:\Users\Pete\Documents\eclipse\mda2idd_report\src\mda2idd_gui.py"/>
+              <subversion id="$Id$"/>
+              <window>
+                <size h="1212" v="561"/>
+                <position h="114" v="232"/>
+                <sash pos="300"/>
+              </window>
+              <file_filter>*.mda</file_filter>
+              <starting_directory>C:\Users\Pete\Documents\eclipse\mda2idd_report\data\mda</starting_directory>
+              <short_summary>False</short_summary>
+              <mrud max_directories="9">
+                <!--MRUD: Most-Recently-Used Directory-->
+                <dir>C:\Users\Pete\Documents\eclipse\mda2idd_report\data\mda</dir>
+                <dir>C:\Users\Pete\Apps\epics\synAppsSVN\support\sscan\documentation</dir>
+                <dir>C:\Temp\mdalib</dir>
+                <dir>C:\Users\Pete\Desktop\scanSee3.1\DATA</dir>
+                <dir>C:\Users\Pete\Documents\eclipse\dc2mda\src</dir>
+                <dir>C:\Users\Pete\Documents\eclipse\dc2mda\src\topo</dir>
+              </mrud>
+            </mda2idd_gui>
+        
+        Items remembered between program sessions include:
+        
+        * window size and position
+        * position of the sash thats plits the file list from the summary output
+        * the list of most-recently-used directories (MRUD)
+        * the first directory to show (the last directory from which an MDA file was selected)
+        
+        .. note::  If more than one copy of this program is run by the same
+           user at the same time, the content of the preferences file will
+           be that of the latest action that forced an update to the file content.
+        
+        '''
         known_os = {
                 'Windows': 'USERPROFILE', 
                 'Linux': 'HOME',
@@ -348,7 +399,7 @@ class MainWindow(wx.Frame):
         self.prefs['sash_pos'] = int(node.attrib['pos'])
 
         node = root.find('mrud')
-	if node is not None:
+        if node is not None:
             self.prefs['mrud_max_directories'] = int(node.attrib['max_directories'])
             self.mrud = [subnode.text.strip() for subnode in node.findall('dir')]
         
@@ -423,6 +474,10 @@ class MainWindow(wx.Frame):
             if self.mrud[0] == newdir:
                 return
             self.mrud.remove(newdir)
+        fileList = self.listMdaFiles(newdir)
+        if len(fileList) == 0:
+            # no MDA files here, do not add this dir to MRUD list
+            return
         self.mrud.insert(0, newdir)
         if len(self.mrud) >= self.prefs['mrud_max_directories']:
             self.mrud = self.mrud[:self.prefs['mrud_max_directories']]
@@ -470,7 +525,8 @@ class MainWindow(wx.Frame):
         info.SetDevelopers(
           (
               'main author: ' + __author__ +  " <" + __author_email__ + ">",
-              'MDA file support: Tim Mooney <mooney@aps.anl.gov>'
+              'MDA file support: Tim Mooney <mooney@aps.anl.gov>',
+              __svnid__,
           )
         )
         wx.AboutBox(info)
@@ -486,11 +542,7 @@ class MainWindow(wx.Frame):
         
     def convertMdaDir(self, path):
         '''convert all MDA files in a given directory'''
-        if not os.path.exists(path):
-            self.setSummaryText('non-existent path: ' + path)
-            return
-        # assumes self.prefs['file_filter'] is just '*.mda'
-	fileList = glob.glob(os.path.join(path, self.prefs['file_filter']))
+        fileList = self.listMdaFiles(path)
         if len(fileList) == 0:
             self.setSummaryText('No MDA files to convert in directory: ' + path)
             return
@@ -504,6 +556,14 @@ class MainWindow(wx.Frame):
             except (mda2idd_report.ReadMdaException, mda2idd_report.RankException), answer:
                 msg = '\n* ' + mdaFile + ': ' + str(answer)
             self.appendSummaryText(msg)
+    
+    def listMdaFiles(self, path):
+        '''return a list of all MDA files in the path directory'''
+        if not os.path.exists(path):
+            self.setSummaryText('non-existent path: ' + path)
+            return None
+        # assumes self.prefs['file_filter'] is just '*.mda'
+        return glob.glob(os.path.join(path, self.prefs['file_filter']))
 
 
 def main():

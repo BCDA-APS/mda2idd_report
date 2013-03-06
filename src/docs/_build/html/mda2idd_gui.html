@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mda2idd_gui &mdash; mda2idd_report 2013-02-14 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2013-02-14',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="mda2idd_report 2013-02-14 documentation" href="index.html" />
+    <link rel="next" title="mda2idd_report" href="mda2idd_report.html" />
+    <link rel="prev" title="mda2idd_report documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mda2idd_report.html" title="mda2idd_report"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="mda2idd_report documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mda2idd_gui</a><ul>
+<li><a class="reference internal" href="#module-mda2idd_gui"><tt class="docutils literal"><span class="pre">mda2idd_gui</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#objectives">Objectives</a></li>
+<li><a class="reference internal" href="#instructions">Instructions</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#source-code-documentation">Source Code Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">mda2idd_report documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mda2idd_report.html"
+                        title="next chapter">mda2idd_report</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mda2idd_gui.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mda2idd-gui">
+<h1>mda2idd_gui<a class="headerlink" href="#mda2idd-gui" title="Permalink to this headline">¶</a></h1>
+<p>Source code documentation</p>
+<div class="section" id="module-mda2idd_gui">
+<span id="mda2idd-gui-module"></span><h2><a class="reference internal" href="#module-mda2idd_gui" title="mda2idd_gui"><tt class="xref py py-mod docutils literal"><span class="pre">mda2idd_gui</span></tt></a> Module<a class="headerlink" href="#module-mda2idd_gui" title="Permalink to this headline">¶</a></h2>
+<p>GUI for <a class="reference internal" href="mda2idd_report.html#module-mda2idd_report" title="mda2idd_report"><tt class="xref py py-mod docutils literal"><span class="pre">mda2idd_report</span></tt></a></p>
+<div class="section" id="objectives">
+<h3>Objectives<a class="headerlink" href="#objectives" title="Permalink to this headline">¶</a></h3>
+<p>Provide GUI tools to browse a file system and select
+MDA files.  Process them with <a class="reference internal" href="mda2idd_report.html#module-mda2idd_report" title="mda2idd_report"><tt class="xref py py-mod docutils literal"><span class="pre">mda2idd_report</span></tt></a>.</p>
+</div>
+<div class="section" id="instructions">
+<h3>Instructions<a class="headerlink" href="#instructions" title="Permalink to this headline">¶</a></h3>
+<p>Browse to a directory containing MDA files.
+Select one.  A summary will be shown.
+Choose:
+* File &#8211;&gt; Save  (or ^S)  to convert selected MDA file to an ASCII text file.
+* File &#8211;&gt; Convert entire Directory (^D) to convert all MDA files</p>
+<p>For now, only <cite>*.mda</cite> files may be browsed.
+ASCII text files will be written to directory: ../ASCII/
+(relative to the MDA file directory)</p>
+</div>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>presents file system list</li>
+<li>adds directory picker dialog and text entry box</li>
+<li>preview brief header or full summary of MDA file (^B)</li>
+<li>convert one selected MDA file to ASCII (^S)</li>
+<li>convert entire directory of MDA files to ASCII (^D)</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="source-code-documentation">
+<h3>Source Code Documentation<a class="headerlink" href="#source-code-documentation" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="mda2idd_gui.MainWindow">
+<em class="property">class </em><tt class="descclassname">mda2idd_gui.</tt><tt class="descname">MainWindow</tt><big>(</big><em>parent=None</em>, <em>start_fresh=False</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">wx._windows.Frame</span></tt></p>
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.GetDefaultPreferencesFileName">
+<tt class="descname">GetDefaultPreferencesFileName</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.GetDefaultPreferencesFileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.GetDefaultPreferencesFileName" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the name of the preferences file for this session</p>
+<p>The preferences file, an XML file that contains recent program
+settings for specific program features, is saved in the HOME
+(or USERPROFILE on Windows) directory for the user account under
+the <tt class="docutils literal"><span class="pre">.mda2idd_gui_rc.xml</span></tt> file name.  Here is an example
+from a Windows 7 system:</p>
+<div class="highlight-python"><pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;mda2idd_gui datetime="2013-03-06 13:09:17.593000" version="2013-02"&gt;
+  &lt;preferences_file&gt;C:\Users\Pete\.mda2idd_gui_rc.xml&lt;/preferences_file&gt;
+  &lt;written_by program="C:\Users\Pete\Documents\eclipse\mda2idd_report\src\mda2idd_gui.py"/&gt;
+  &lt;subversion id="$Id: mda2idd_gui.py 1243 2013-03-05 19:05:51Z jemian $"/&gt;
+  &lt;window&gt;
+    &lt;size h="1212" v="561"/&gt;
+    &lt;position h="114" v="232"/&gt;
+    &lt;sash pos="300"/&gt;
+  &lt;/window&gt;
+  &lt;file_filter&gt;*.mda&lt;/file_filter&gt;
+  &lt;starting_directory&gt;C:\Users\Pete\Documents\eclipse\mda2idd_report\data\mda&lt;/starting_directory&gt;
+  &lt;short_summary&gt;False&lt;/short_summary&gt;
+  &lt;mrud max_directories="9"&gt;
+    &lt;!--MRUD: Most-Recently-Used Directory--&gt;
+    &lt;dir&gt;C:\Users\Pete\Documents\eclipse\mda2idd_report\data\mda&lt;/dir&gt;
+    &lt;dir&gt;C:\Users\Pete\Apps\epics\synAppsSVN\support\sscan\documentation&lt;/dir&gt;
+    &lt;dir&gt;C:\Temp\mdalib&lt;/dir&gt;
+    &lt;dir&gt;C:\Users\Pete\Desktop\scanSee3.1\DATA&lt;/dir&gt;
+    &lt;dir&gt;C:\Users\Pete\Documents\eclipse\dc2mda\src&lt;/dir&gt;
+    &lt;dir&gt;C:\Users\Pete\Documents\eclipse\dc2mda\src opo&lt;/dir&gt;
+  &lt;/mrud&gt;
+&lt;/mda2idd_gui&gt;</pre>
+</div>
+<p>Items remembered between program sessions include:</p>
+<ul class="simple">
+<li>window size and position</li>
+<li>position of the sash thats plits the file list from the summary output</li>
+<li>the list of most-recently-used directories (MRUD)</li>
+<li>the first directory to show (the last directory from which an MDA file was selected)</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If more than one copy of this program is run by the same
+user at the same time, the content of the preferences file will
+be that of the latest action that forced an update to the file content.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnAbout">
+<tt class="descname">OnAbout</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnAbout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnAbout" title="Permalink to this definition">¶</a></dt>
+<dd><p>show the &#8220;About&#8221; box</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnConvertAll">
+<tt class="descname">OnConvertAll</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnConvertAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnConvertAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>selected the &#8220;ConvertAll&#8221; menu item</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnMenuFileItemExit">
+<tt class="descname">OnMenuFileItemExit</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnMenuFileItemExit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnMenuFileItemExit" title="Permalink to this definition">¶</a></dt>
+<dd><p>User requested to quit the application</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> &#8211; wxPython event object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnMenuFileItemPrefs">
+<tt class="descname">OnMenuFileItemPrefs</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnMenuFileItemPrefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnMenuFileItemPrefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the preferences to a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnMenuFileItemReportStyle">
+<tt class="descname">OnMenuFileItemReportStyle</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnMenuFileItemReportStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnMenuFileItemReportStyle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnMenuFileItemSave">
+<tt class="descname">OnMenuFileItemSave</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnMenuFileItemSave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnMenuFileItemSave" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the selected MDA file as ASCII</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnMrudItem">
+<tt class="descname">OnMrudItem</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnMrudItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnMrudItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle MRUD menu items</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnSashMoved">
+<tt class="descname">OnSashMoved</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnSashMoved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnSashMoved" title="Permalink to this definition">¶</a></dt>
+<dd><p>user moved the sash</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnSelectDirPicker">
+<tt class="descname">OnSelectDirPicker</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnSelectDirPicker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnSelectDirPicker" title="Permalink to this definition">¶</a></dt>
+<dd><p>user changed the text or browsed to a directory in the picker</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnSelectTreeCtrlItem">
+<tt class="descname">OnSelectTreeCtrlItem</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnSelectTreeCtrlItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnSelectTreeCtrlItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>user selected something in the directory list tree control</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.OnWindowGeometryChanged">
+<tt class="descname">OnWindowGeometryChanged</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.OnWindowGeometryChanged"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.OnWindowGeometryChanged" title="Permalink to this definition">¶</a></dt>
+<dd><p>user changed the window size or position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.appendSummaryText">
+<tt class="descname">appendSummaryText</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.appendSummaryText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.appendSummaryText" title="Permalink to this definition">¶</a></dt>
+<dd><p>post new text to the summary TextCtrl, appending to any existing text</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.convertMdaDir">
+<tt class="descname">convertMdaDir</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.convertMdaDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.convertMdaDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert all MDA files in a given directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.getPreferences">
+<tt class="descname">getPreferences</tt><big>(</big><em>start_fresh=False</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.getPreferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.getPreferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>set program preferences: default (start_fresh) 
+and then optionally override from a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.listMdaFiles">
+<tt class="descname">listMdaFiles</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.listMdaFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.listMdaFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a list of all MDA files in the path directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.readPreferences">
+<tt class="descname">readPreferences</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.readPreferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.readPreferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>read program prefs from a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.setCurrentDirectory">
+<tt class="descname">setCurrentDirectory</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.setCurrentDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.setCurrentDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the current directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.setStatusText">
+<tt class="descname">setStatusText</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.setStatusText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.setStatusText" title="Permalink to this definition">¶</a></dt>
+<dd><p>post new text to the status bar</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.setSummaryText">
+<tt class="descname">setSummaryText</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.setSummaryText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.setSummaryText" title="Permalink to this definition">¶</a></dt>
+<dd><p>post new text to the summary TextCtrl, clearing any existing text</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.update_mrud">
+<tt class="descname">update_mrud</tt><big>(</big><em>newdir</em><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.update_mrud"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.update_mrud" title="Permalink to this definition">¶</a></dt>
+<dd><p>MRUD: list of most-recently-used directories</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.update_mrud_menus">
+<tt class="descname">update_mrud_menus</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.update_mrud_menus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.update_mrud_menus" title="Permalink to this definition">¶</a></dt>
+<dd><p>manage the MRUD menu items</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mda2idd_gui.MainWindow.writePreferences">
+<tt class="descname">writePreferences</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#MainWindow.writePreferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.MainWindow.writePreferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>save program prefs to a file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mda2idd_gui.main">
+<tt class="descclassname">mda2idd_gui.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/mda2idd_gui.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mda2idd_gui.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>presents the GUI</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mda2idd_report.html" title="mda2idd_report"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="mda2idd_report documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">mda2idd_report 2013-02-14 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Pete Jemian.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
