@@ -324,7 +324,7 @@ def report_2d(data):
           # TODO: right-pad when curr_pt < npts !
         )
         for colNum in range(num_cols):
-            img_title = {False: 'Image(', True: ''}[colNum > 0]
+            img_title = {False: 'Image', True: ''}[colNum > 0]
             columns.append(
                 [str(data[1].p[0].data[colNum]), str(colNum+1), img_title]
               + [str(item) for item in data[2].d[detNum].data[colNum]]
