@@ -258,7 +258,10 @@ def report_1d(data):
     header.append( '; Filename: %s' % data[0]['filename'] )
     header.append( '; 1D Scanno # = %8d' % data[0]['scan_number'] )
     header.append( '; title= (Scan # %d)' % data[0]['scan_number'] )
-    header.append( '; xtitle= %s(%s)' % (data[1].p[0].desc, data[1].p[0].unit) )
+    if len(data[1].p) > 0:
+        header.append( '; xtitle= %s(%s)' % (data[1].p[0].desc, data[1].p[0].unit) )
+    else:
+        header.append( '; xtitle= no x axis positioners in 1-D scan level!' )
     header.append( '; ytitle= ' )
     header.append( '; timeStamp= %s' % data[1].time.split('.')[0] )
     header.append( '; comment= ' )

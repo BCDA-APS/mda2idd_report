@@ -547,13 +547,18 @@ class MainWindow(wx.Frame):
             self.setSummaryText('No MDA files to convert in directory: ' + path)
             return
         self.setSummaryText('Converting these files:\n')
+        known_exceptions = (
+            mda2idd_report.ReadMdaException,    # some problem reading the MDA file
+            mda2idd_report.RankException,       # only handle 1-D and 2-D scans
+            IndexError,                         # requested array index is not available
+        )
         for mdaFile in sorted(fileList):
             try:
                 answer = mda2idd_report.report(mdaFile, allowException=True)
                 msg = ''
                 for k, v in answer.items():
                     msg += '\n* ' + k + ' --> ' + str(v)
-            except (mda2idd_report.ReadMdaException, mda2idd_report.RankException), answer:
+            except known_exceptions, answer:
                 msg = '\n* ' + mdaFile + ': ' + str(answer)
             self.appendSummaryText(msg)
     
