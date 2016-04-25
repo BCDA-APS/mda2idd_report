@@ -12,15 +12,6 @@ Source Code Documentation
 '''
 
 
-########### SVN repository information ###################
-# $Date$
-# $Author$
-# $Revision$
-# $URL$
-# $Id$
-########### SVN repository information ###################
-
-
 import optparse
 import os
 import mda

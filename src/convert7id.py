@@ -24,15 +24,6 @@ goal of providing a default plot when the data file is opened.
 '''
 
 
-########### SVN repository information ###################
-# $Date$
-# $Author$
-# $Revision$
-# $URL$
-# $Id$
-########### SVN repository information ###################
-
-
 import datetime
 import h5py
 import os

@@ -8,15 +8,6 @@ Convert MDA file to NeXus
 '''
 
 
-########### SVN repository information ###################
-# $Date$
-# $Author$
-# $Revision$
-# $URL$
-# $Id$
-########### SVN repository information ###################
-
-
 import mda
 import datetime
 import h5py

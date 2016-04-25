@@ -1,7 +1,6 @@
-.. $Id: $
 
 mda2idd_report documentation
-=======================================
+============================
 
 Many sectors of the APS use the EPICS [#]_ *sscan* record [#]_ from *synApps* [#]_ to collect
 their experimental data.  The *saveData* process [#]_ runs in an EPICS IOC to store 
@@ -28,7 +27,7 @@ with EPICS using Channel Access).
 ---------------
 
 Contents
-===========
+========
 
 .. toctree::
    :maxdepth: 2
@@ -38,7 +37,9 @@ Contents
    mda2idd_summary
 
 Web URL
-========
+=======
+
+the previous documentation is still visible:
 
 * tiny: http://tinyurl.com/bq9l5o7
 * preview: http://preview.tinyurl.com/bq9l5o7
