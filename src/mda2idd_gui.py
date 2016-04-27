@@ -45,6 +45,7 @@ import glob
 import platform
 import os
 import sys
+import traceback
 import wx
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -53,13 +54,10 @@ import mda2idd_summary
 
 
 __description__ = "GUI for mda2idd_report"
-__version__ = "2013-02"
-__svnid__ = "$Id$"
+__version__ = "2016-04"
 __author__ = "Pete Jemian"
 __author_email__ = "jemian@anl.gov"
-__url__ = "https://subversion.xray.aps.anl.gov/bcdaext/yviewer/"
-__url__ = "$URL$".strip('$').split()[1]
-__url__ = "http://tinyurl.com/bq9l5o7"
+__url__ = "https://github.com/BCDA-APS/mda2idd_report"
 
 
 RC_FILE = ".mda2idd_gui_rc.xml"
@@ -424,9 +422,6 @@ class MainWindow(wx.Frame):
         node = ElementTree.SubElement(root, "written_by")
         node.set("program", sys.argv[0])
         
-        node = ElementTree.SubElement(root, "subversion")
-        node.set("id", __svnid__)
-        
         window = ElementTree.SubElement(root, "window")
         node = ElementTree.SubElement(window, "size")
         node.set("h", str(self.prefs['size_h']))
@@ -517,11 +512,11 @@ class MainWindow(wx.Frame):
           (
               'main author: ' + __author__ +  " <" + __author_email__ + ">",
               'MDA file support: Tim Mooney <mooney@aps.anl.gov>',
-              __svnid__,
+              __version__,
           )
         )
         wx.AboutBox(info)
-        
+
     def OnConvertAll(self, event):
         '''selected the "ConvertAll" menu item'''
         # use path from preferences
@@ -542,6 +537,8 @@ class MainWindow(wx.Frame):
             mda2idd_report.ReadMdaException,    # some problem reading the MDA file
             mda2idd_report.RankException,       # only handle 1-D and 2-D scans
             IndexError,                         # requested array index is not available
+            OSError,                            # 1 case: could not create ../ASCII directory
+            Exception,                          # anything at all
         )
         for mdaFile in sorted(fileList):
             try:
@@ -550,7 +547,9 @@ class MainWindow(wx.Frame):
                 for k, v in answer.items():
                     msg += '\n* ' + k + ' --> ' + str(v)
             except known_exceptions, answer:
-                msg = '\n* ' + mdaFile + ': ' + str(answer)
+                problem = mdaFile + '\n' + traceback.format_exc()
+                self.messageDialog('problem', problem)
+                return
             self.appendSummaryText(msg)
     
     def listMdaFiles(self, path):
@@ -560,6 +559,21 @@ class MainWindow(wx.Frame):
             return None
         # assumes self.prefs['file_filter'] is just '*.mda'
         return glob.glob(os.path.join(path, self.prefs['file_filter']))
+        
+    def messageDialog(self, description, text):
+        '''
+        Present a dialog asking user to acknowledge something
+
+        :param str description: short description of message
+        :param str text: message to be shown
+        :param bool yes_and_no: if False (default), does not show a <No> button
+        '''
+        # confirm this step
+        self.SetStatusText('Request Acknowledgment')
+        dlg = wx.MessageDialog(self, text, description, wx.CANCEL)
+        result = dlg.ShowModal()
+        dlg.Destroy()           # destroy first
+        return result
 
 
 def main():
@@ -569,7 +583,6 @@ def main():
                         dest='start_fresh',
                         help='start fresh (ignore / replace the prefs file)')
     parser.add_option('-v', '--version', action='version')
-    # , version=__svnid__
     # also: -h gets a help / usage message
     options = parser.parse_args()[0]  # ignore any args
     fresh_start = options.start_fresh
