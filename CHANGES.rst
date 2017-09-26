@@ -2,12 +2,8 @@
 Change History
 ##############
 
-:2017.926.0:
+:2017.0926.0:
 
-    * `#7 <https://github.com/BCDA-APS/mda2idd_report/issues/7>`_
-      add setup.py and other packaging
-    * `#6 <https://github.com/BCDA-APS/mda2idd_report/issues/6>`_
-      use versioneer
     * `#5 <https://github.com/BCDA-APS/mda2idd_report/issues/5>`_
       IndexError: list index out of range
     * `#4 <https://github.com/BCDA-APS/mda2idd_report/issues/4>`_
