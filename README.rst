@@ -11,4 +11,4 @@ README: mda2idd_report
 :license:   ANL OPEN SOURCE LICENSE (see *LICENSE*)
 :git:       https://github.com/BCDA-APS/mda2idd_report.git
 :TODO list: https://github.com/BCDA-APS/mda2idd_report/issues
-:docs:      https://subversion.xray.aps.anl.gov/bcdaext/mda2idd_report/src/docs/_build/html/index.html
+:docs:      -tba-
