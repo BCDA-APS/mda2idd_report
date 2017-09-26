@@ -54,6 +54,8 @@ various Linux distributions (Ubuntu, mint, and RHEL Linux) and on MacOSX.
 It was also tested on solaris but the performance was too poor on that 
 specific system to advocate its continued use.
 
+>>> git clone https://github.com/BCDA-APS/mda2idd_report.git
+
 MDA file support
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -61,16 +63,16 @@ This code requires the *mda* file format support library from APS synApps.
 Principally, two files support files are needed.
 Download them and place them in the same directory with this project.
 
-* https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils/mda.py
-* https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils/f_xdrlib.py
+* https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/mda.py
+* https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/f_xdrlib.py
 
 In the same directory, there are also a pair of files (*setup.cfg* & *setup.py*) 
 that can be used to install the mda support into the python site-packages directory.
 Install them with these commands:
 
->>> svn co https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils mdaPythonUtils
->>> cd mdaPythonUtils
->>> python setup.py install
+>>> git clone https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils synApps-utils
+>>> cd synApps-utils/mdaPythonUtils
+>>> pip install .
 
 ---------------------------------
 
@@ -78,15 +80,6 @@ Source Code Documentation
 -------------------------
 
 '''
-
-
-########### SVN repository information ###################
-# $Date$
-# $Author$
-# $Revision$
-# $URL$
-# $Id$
-########### SVN repository information ###################
 
 
 import glob
@@ -98,7 +91,6 @@ import mda
 ROW_INDEX_FORMAT = '%5d'
 
 __description__ = "Generate ASCII text files from MDA files for APS station 2-ID-D"
-__svnid__ = "$Id$"
 
 
 def summaryMda(mdaFileName):
@@ -199,7 +191,7 @@ def report(mdaFileName, allowException=False):
     if data is None:
         msg = "could not read data from MDA file: " + mdaFileName
         if allowException:
-            raise ReadMdaException, msg
+            raise ReadMdaException(msg)
         else:
             print msg
         return converted
@@ -217,7 +209,7 @@ def report(mdaFileName, allowException=False):
     else:
         msg = '%d-D data: not handled by this code' % rank
         if allowException:
-            raise RankException, msg
+            raise RankException(msg)
         else:
             print msg
                 
@@ -316,23 +308,32 @@ def report_2d(data):
 
         # build the table, one column at a time, then use zip to transpose the table to rows
         columns = []
-        columns.append(
-            [';', ';', '; Xindex,']
-          + [ROW_INDEX_FORMAT % (rownum+1) for rownum in range(num_rows)]
-          # TODO: right-pad when curr_pt < npts !
-        )
-        columns.append(
-            ['Yvalue:', 'Yindex', 'Xvalue,']
-          + [str(item) for item in data[2].p[0].data[0]]
-          # TODO: right-pad when curr_pt < npts !
-        )
+        row = [';', ';', '; Xindex,']
+        row += [ROW_INDEX_FORMAT % (rownum+1) for rownum in range(num_rows)]
+        # if len(???) < ???:
+        #     pass            # TODO: extend (pad) when curr_pt < npts !
+        columns.append(row)
+
+        row = ['Yvalue:', 'Yindex', 'Xvalue,']
+        if len(data[2].p) > 0:
+            row += [str(item) for item in data[2].p[0].data[0]]
+            if len(data[2].p[0].data[0]) < data[2].npts:
+                pass            # TODO: extend (pad) when curr_pt < npts !
+        else:
+            # no positioners at this dimension, make up some column labels
+            row += [str(item+1) for item in range(data[2].npts)]
+        columns.append(row)
+
         for colNum in range(num_cols):
             img_title = {False: 'Image', True: ''}[colNum > 0]
-            columns.append(
-                [str(data[1].p[0].data[colNum]), str(colNum+1), img_title]
-              + [str(item) for item in data[2].d[detNum].data[colNum]]
-              # TODO: right-pad when curr_pt < npts !
-            )
+            if len(data[1].p) == 0:
+                row = [str(colNum+1), str(colNum+1), img_title]
+            else:
+                row = [str(data[1].p[0].data[colNum]), str(colNum+1), img_title]
+            row += [str(item) for item in data[2].d[detNum].data[colNum]]
+            if len(data[2].d[detNum].data[colNum]) < data[2].npts:
+                pass            # TODO: extend (pad) when curr_pt < npts !
+            columns.append(row)
 
         output[asciiFile] = '\n'.join(header) + '\n' + columnsToText(columns) 
     
@@ -425,7 +426,7 @@ def getAsciiPath(mdaFileName):
     if not os.path.exists(asciiPath):
         os.makedirs(asciiPath)
         if not os.path.exists(asciiPath):
-            #raise OSError, "could not create ASCII subdirectory, does not exist either"
+            #raise OSError("could not create ASCII subdirectory, does not exist either")
             asciiPath = mdaPath
     return asciiPath
 
@@ -451,7 +452,7 @@ def report_list(mdaFileList):
 def main():
     '''handles command-line input'''
     usage = 'usage: %prog [options] mdaFile [mdaFile ...]'
-    parser = optparse.OptionParser(description=__description__, usage=usage, version=__svnid__)
+    parser = optparse.OptionParser(description=__description__, usage=usage)
     options, args = parser.parse_args()
     report_list(args)
 

@@ -303,7 +303,16 @@ class MainWindow(wx.Frame):
         '''save the selected MDA file as ASCII'''
         if self.selectedMdaFile is not None and os.path.exists(self.selectedMdaFile):
             self.setStatusText("converting MDA file %s to ASCII text" % self.selectedMdaFile)
-            mda2idd_report.report(self.selectedMdaFile)
+            converted = mda2idd_report.report(self.selectedMdaFile)
+            if self.selectedMdaFile in converted:
+                msg = "converted MDA file " + self.selectedMdaFile
+                num = len(converted[self.selectedMdaFile])
+                msg += " to %d ASCII text file" % num
+                if num > 1:
+                    msg += "s"  # plural
+                self.setStatusText(msg)
+            else:
+                self.setStatusText("No ASCII files written from " + self.selectedMdaFile)
     
     def OnMenuFileItemPrefs(self, event):
         '''save the preferences to a file'''
