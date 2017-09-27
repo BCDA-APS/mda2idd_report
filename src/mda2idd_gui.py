@@ -347,6 +347,9 @@ class MainWindow(wx.Frame):
     def appendSummaryText(self, text):
         '''post new text to the summary TextCtrl, appending to any existing text'''
         self.textCtrl1.AppendText(str(text))
+        # FIXME: self.textCtrl1.Refresh()
+        # Refresh() won't work here since the caller does not let the window get redrawn
+        # Refactor to update as loop through MDA files progresses.
     
     def setStatusText(self, text):
         '''post new text to the status bar'''
@@ -551,14 +554,16 @@ class MainWindow(wx.Frame):
         )
         for mdaFile in sorted(fileList):
             try:
-                answer = mda2idd_report.report(mdaFile, allowException=True)
                 msg = ''
+                answer = mda2idd_report.report(mdaFile, allowException=True)
                 for k, v in answer.items():
-                    msg += '\n* ' + k + ' --> ' + str(v)
-            except known_exceptions, answer:
+                    msg += '\n* ' + k + ' --> '  # + str(v)
+                    msg += "\n  " + "\n  ".join(v)
+            except known_exceptions as answer:
                 problem = mdaFile + '\n' + traceback.format_exc()
-                self.messageDialog('problem', problem)
-                return
+                # self.messageDialog('problem', problem)
+                # return
+                msg += '\n* ' + problem
             self.appendSummaryText(msg)
     
     def listMdaFiles(self, path):

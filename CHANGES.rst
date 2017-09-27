@@ -2,6 +2,11 @@
 Change History
 ##############
 
+:2017.0927.0:
+
+    * `#9 <https://github.com/BCDA-APS/mda2idd_report/issues/9>`_
+      convert entire directory should continue after exception on one file
+
 :2017.0926.0:
 
     * `#5 <https://github.com/BCDA-APS/mda2idd_report/issues/5>`_
