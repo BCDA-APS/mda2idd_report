@@ -2,11 +2,12 @@
 
 # 2017-09-25, PRJ:  decide which python to be run at APS
 if (`uname -s` == "Linux") then
-  setenv THIS_PYTHON /APSshare/epd/rh6-x86/bin/python
+  #setenv THIS_PYTHON /APSshare/epd/rh6-x86/bin/python
+  # 2017-09-26: newer python at APS
   setenv THIS_PYTHON /APSshare/anaconda/x86_64/bin/python
 endif
 
-setenv TOOL /home/beams/USER2IDD/Documents/mda2idd_report/mda2idd_gui.py
+setenv TOOL /home/beams/USER2IDD/Documents/mda2idd_report/src/mda2idd_gui.py
 
 # ignore all console and error output
 ${THIS_PYTHON} ${TOOL} >& /dev/null &
