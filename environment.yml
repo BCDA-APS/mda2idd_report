@@ -1,0 +1,5 @@
+name: mda2idd_report
+dependencies:
+  - python=2.7.*
+  - wxPython
+  - sphinx
