@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 GUI for :mod:`mda2idd_report`
 
 Objectives
@@ -36,7 +36,11 @@ Features
 Source Code Documentation
 -------------------------
 
-'''
+.. autosummary::
+
+    ~MainWindow
+
+"""
 
 
 import optparse
@@ -64,6 +68,9 @@ RC_FILE = ".mda2idd_gui_rc.xml"
 
 
 class MainWindow(wx.Frame):
+    """
+    Manage the application through the main window
+    """
     
     def __init__(self, parent=None, start_fresh=False):
         wx.Frame.__init__(self, parent, wx.ID_ANY, u'mda2idd_gui', wx.DefaultPosition, 

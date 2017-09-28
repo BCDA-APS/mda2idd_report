@@ -79,6 +79,18 @@ Install them with these commands:
 Source Code Documentation
 -------------------------
 
+.. autosummary::
+
+    ~summaryMda
+    ~report
+    ~report_1d
+    ~report_2d
+    ~columnsToText
+    ~writeOutput
+    ~getAsciiFileName
+    ~getAsciiPath
+    ~report_list
+
 '''
 
 

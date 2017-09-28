@@ -6,8 +6,14 @@ Generate ASCII text summaries of MDA files for APS station 2-ID-D
 
 ---------------
 
+
 Source Code Documentation
 -------------------------
+
+.. autosummary::
+
+    ~summaryMda
+    ~summary_list
 
 '''
 
@@ -39,8 +45,8 @@ def summaryMda(mdaFileName, shortReport = True):
         reportType = mda.readMDA	# /APSshare/bin/python's mda does not have skimMDA
     try:
         data = reportType(mdaFileName) # just the header info
-    except Exception, report:
-	return "problem with %s: %s" % (mdaFileName, str(report))
+    except Exception as report:
+        return "problem with %s: %s" % (mdaFileName, str(report))
     if data is None:
         return "could not read: " + mdaFileName
     
