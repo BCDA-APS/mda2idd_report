@@ -226,7 +226,7 @@ def readScan(scanFile, verbose=0, out=sys.stdout, unpacker=None):
     """usage: (scan,num) = readScan(scanFile, verbose=0, out=sys.stdout)"""
 
     scan = scanDim()    # data structure to hold scan info and data
-    buf = scanFile.read(10000) # enough to read scan header
+    buf = scanFile.read(100000) # enough to read scan header
     if unpacker == None:
         u = xdr.Unpacker(buf)
     else:
