@@ -56,23 +56,24 @@ specific system to advocate its continued use.
 
 >>> git clone https://github.com/BCDA-APS/mda2idd_report.git
 
-MDA file support
-^^^^^^^^^^^^^^^^^^^^^^
-
-This code requires the *mda* file format support library from APS synApps.  
-Principally, two files support files are needed.
-Download them and place them in the same directory with this project.
-
-* https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/mda.py
-* https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/f_xdrlib.py
-
-In the same directory, there are also a pair of files (*setup.cfg* & *setup.py*) 
-that can be used to install the mda support into the python site-packages directory.
-Install them with these commands:
-
->>> git clone https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils synApps-utils
->>> cd synApps-utils/mdaPythonUtils
->>> pip install .
+.. mda support now included as of 2017-09-28
+    MDA file support
+    ^^^^^^^^^^^^^^^^^^^^^^
+    
+    This code requires the *mda* file format support library from APS synApps.  
+    Principally, two support files are needed.
+    Download them and place them in the same directory with this project.
+    
+    * https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/mda.py
+    * https://raw.githubusercontent.com/EPICS-synApps/utils/master/mdaPythonUtils/f_xdrlib.py
+    
+    In the same directory, there are also a pair of files (*setup.cfg* & *setup.py*) 
+    that can be used to install the mda support into the python site-packages directory.
+    Install them with these commands:
+    
+    >>> git clone https://subversion.xray.aps.anl.gov/synApps/utils/trunk/mdaPythonUtils synApps-utils
+    >>> cd synApps-utils/mdaPythonUtils
+    >>> pip install .
 
 ---------------------------------
 
