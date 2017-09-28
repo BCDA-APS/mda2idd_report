@@ -36,14 +36,15 @@ Contents
    mda2idd_report
    mda2idd_summary
 
-Web URL
-=======
-
-the previous documentation is still visible:
-
-* tiny: http://tinyurl.com/bq9l5o7
-* preview: http://preview.tinyurl.com/bq9l5o7
-* full: https://subversion.xray.aps.anl.gov/bcdaext/mda2idd_report/src/docs/_build/html/index.html
+..
+   Web URL
+   =======
+   
+   the previous documentation is still visible:
+   
+   * tiny: http://tinyurl.com/bq9l5o7
+   * preview: http://preview.tinyurl.com/bq9l5o7
+   * full: https://subversion.xray.aps.anl.gov/bcdaext/mda2idd_report/src/docs/_build/html/index.html
 
 Indices and tables
 ==================
