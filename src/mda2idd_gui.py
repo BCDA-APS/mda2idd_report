@@ -40,6 +40,8 @@ Source Code Documentation
 
     ~MainWindow
 
+--------------
+
 """
 
 
